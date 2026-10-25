@@ -1,0 +1,16 @@
+{
+  "name": "Kids Play",
+  "short_name": "Kids Play",
+  "description": "Drawing and colouring for Carrie and Covey. Works offline, no ads, nothing leaves the iPad.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#fff8ef",
+  "theme_color": "#ffe9dc",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
