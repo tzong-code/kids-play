@@ -30,7 +30,7 @@ export const PROFILES = {
     age: 5,
     theme: 'princess',
     avatar: 'cat',          // drawn mascot ids live in js/art.js; others are sticker ids
-    avatars: ['cat', 'kitten', 'unicorn', 'bunny', 'fairy', 'crown'],
+    avatars: ['cat', 'cat-sprinkle', 'cat-button', 'cat-whisker', 'cat-pudding', 'cat-mochi', 'unicorn'],
     showText: true,
     // Pinks and purples first, then the rest.
     palette: pick(['pink', 'hot pink', 'light pink', 'purple', 'lilac', 'red', 'orange', 'yellow',

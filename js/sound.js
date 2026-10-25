@@ -58,6 +58,21 @@ export const sound = {
     [523, 659, 784, 1047].forEach((f, i) => tone({ type: 'triangle', from: f, dur: 0.18, vol: 0.35, delay: i * 0.09 }));
   },
   nope() { tone({ type: 'triangle', from: 300, to: 200, dur: 0.15, vol: 0.3 }); },
+  // Sticker-scene sounds (GAME-01 / GAME-02 recipes).
+  chime() {
+    const f = [880, 1108, 1318][(Math.random() * 3) | 0];
+    tone({ from: f, to: f * 1.5, dur: 0.5, vol: 0.3 });
+  },
+  bounce() { tone({ type: 'square', from: 220, to: 110, dur: 0.18, vol: 0.18 }); },
+  piano() {
+    const f = [261.6, 293.7, 329.6, 349.2, 392, 440, 493.9, 523.3][(Math.random() * 8) | 0];
+    tone({ type: 'triangle', from: f, dur: 0.8, vol: 0.4 });
+  },
+  door() { tone({ type: 'triangle', from: 400, to: 800, dur: 0.35, vol: 0.25 }); },
+  /** Soft falling "good night" notes for the lock screen. */
+  lullaby() {
+    [784, 659, 523, 392].forEach((f, i) => tone({ from: f, dur: 0.7, vol: 0.22, delay: i * 0.38 }));
+  },
 };
 
 let voice;

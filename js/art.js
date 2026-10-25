@@ -1,7 +1,13 @@
 // Hand-drawn "chunky toy" art as inline SVG: mascots, tool icons, home tiles and scenes.
 // Everything shares one thick ink outline so it reads like a set of cartoon stickers.
 
-import { STICKERS } from '../assets/art/stickers.js';
+import { STICKERS as BASE } from '../assets/art/stickers.js';
+import { STICKERS_CATS } from '../assets/art/stickers-cats.js';
+import { STICKERS_ROOMS_A } from '../assets/art/stickers-rooms-a.js';
+import { STICKERS_ROOMS_B } from '../assets/art/stickers-rooms-b.js';
+
+/** Every sticker in the app, by id: stamps, scene stickers, dollhouse items and the cat friends. */
+export const STICKERS = { ...BASE, ...STICKERS_CATS, ...STICKERS_ROOMS_A, ...STICKERS_ROOMS_B };
 
 const INK = '#2B2340';
 const PINK = '#FF5FA8', BUBBLE = '#FF8FB8', LILAC = '#B78CFF', GOLD = '#FFC93C', GOLD_D = '#E0A21A';
@@ -221,6 +227,16 @@ const ICONS = {
     `<path d="M26 15 V11 H38 V15" fill="none"/>` +
     `<path d="M27 30 L28.5 47 M37 30 L35.5 47" fill="none" stroke-width="2.4"/>`) + shine(23, 30, 2.4, 7, 0),
 
+  moon: () => ink(3, `<path d="M40 8 a26 26 0 1 0 18 38 a20 20 0 1 1 -18 -38 Z" fill="${GOLD}"/>`) +
+    ink(2.5, `<path d="M10 14 h7 l-7 8 h7" fill="none"/>`) + shine(28, 24, 4, 2),
+
+  dollhouse: () => ink(3,
+    `<path d="M16 26 L15 9 L26 18 Z" fill="${PINK}"/><path d="M48 26 L49 9 L38 18 Z" fill="${PINK}"/>` +
+    `<path d="M6 32 L32 12 L58 32 Z" fill="${PINK}"/>` +
+    `<rect x="12" y="30" width="40" height="26" rx="4" fill="${BUBBLE}"/>` +
+    `<rect x="17" y="35" width="11" height="9" rx="2.5" fill="${GOLD}"/><rect x="36" y="35" width="11" height="9" rx="2.5" fill="${LILAC}"/>` +
+    `<path d="M27 56 V49 a5 5 0 0 1 10 0 V56 Z" fill="${CREAM}"/>`) + shine(22, 24, 5, 2, -36),
+
   gear: () => {
     let teeth = '';
     for (let i = 0; i < 8; i++) teeth += `<rect x="28" y="6" width="8" height="12" rx="2.5" fill="#D9D2E6" transform="rotate(${i * 45} 32 32)"/>`;
@@ -254,6 +270,21 @@ export const TILE_ART = {
     tube('M108 110 L84 80', 5, WOOD) + ink(3,
       `<path d="M80 86 L74 76 L84 70 L90 80 Z" fill="#D9D2E6"/><path d="M76 74 C66 66 64 56 68 52 C76 54 84 62 82 70 Z" fill="${PINK}"/>`) +
     shine(30, 30, 9, 4)),
+  stickers: () => svg('0 0 120 120',
+    ink(3.5, `<rect x="16" y="20" width="84" height="84" rx="12" fill="${CREAM}" transform="rotate(-6 58 62)"/>`) +
+    ink(3.5, `<path d="${star(46, 52, 24, 11)}" fill="${GOLD}"/>`) + eyes(41, 51, 52, 2.2, 2.8) +
+    ink(3.5, `<path d="M82 92 C70 82 62 74 66 66 C69 61 76 62 82 68 C88 62 95 61 98 66 C102 74 94 82 82 92 Z" fill="${PINK}"/>`) +
+    ink(3.5, `<path d="M70 26 a10 10 0 0 1 20 0 a10 10 0 0 1 -20 0 Z" fill="${MINT}"/>`) +
+    // a sticker peeling up at the corner
+    ink(3, `<path d="M84 104 L100 88 L104 104 Z" fill="#fff"/>`) + shine(38, 42, 5, 2.4) + shine(78, 22, 3, 1.6)),
+  dollhouse: () => svg('0 0 120 120', ink(3.5,
+    `<path d="M30 40 L28 14 L46 28 Z" fill="${PINK}"/><path d="M90 40 L92 14 L74 28 Z" fill="${PINK}"/>` +
+    `<path d="M10 52 L60 18 L110 52 Z" fill="${PINK}"/>` +
+    `<rect x="20" y="50" width="80" height="58" rx="6" fill="${BUBBLE}"/>` +
+    `<rect x="28" y="58" width="26" height="20" rx="5" fill="${GOLD}"/><rect x="66" y="58" width="26" height="20" rx="5" fill="${LILAC}"/>` +
+    `<rect x="28" y="84" width="26" height="18" rx="5" fill="${MINT}"/>` +
+    `<path d="M68 108 V90 a10 10 0 0 1 20 0 V108 Z" fill="${CREAM}"/>`) +
+    eyes(52, 68, 38, 2.4, 3) + ink(2.4, `<path d="M56 44 Q60 47 64 44" fill="none"/>`) + shine(36, 32, 7, 2.5, -30)),
   gallery: () => svg('0 0 120 120',
     ink(3, `<path d="M26 32 L60 10 L94 32" fill="none"/><circle cx="60" cy="10" r="4.5" fill="${PINK}"/>`) + ink(3.5,
       `<rect x="14" y="30" width="92" height="78" rx="12" fill="${GOLD}"/>` +
@@ -325,4 +356,43 @@ export function fishSvg(body = GOLD, fin = CORAL) {
     `<path d="M50 16 C58 4 74 8 76 20" fill="${fin}"/>` +
     `<path d="M64 26 Q72 40 64 54" fill="none" stroke-width="2.6"/>`) +
     eyes(36, 36, 36, 4.4, 5.4) + ink(2.6, `<path d="M24 48 Q30 52 34 48" fill="none"/>`) + shine(46, 24, 10, 4));
+}
+
+// ---------- play timer ----------
+
+/** The little timer cat: its eyes close as `sleepy` goes 0 → 1; `yawn` opens its mouth. */
+export function sleepyCat(sleepy = 0, yawn = false) {
+  // Eyes get smaller as she gets sleepy, then close into soft curves (never a grumpy half-lid).
+  const ry = 6.2 - sleepy * 5;
+  const eye = x => sleepy > 0.75
+    ? `<path d="M${x - 6} 57 Q${x} 62 ${x + 6} 57" fill="none" stroke-width="3"/>`
+    : `<ellipse cx="${x}" cy="${58 + sleepy * 2}" rx="${5 - sleepy}" ry="${ry}" fill="${INK}" stroke="none"/>` +
+      (ry > 3 ? `<circle cx="${x + 1.6}" cy="${56 + sleepy * 2}" r="1.7" fill="#fff" stroke="none"/>` : '');
+  return svg('0 0 100 100', ink(3.5,
+    `<path d="M19 46 L17 9 L46 27 Z" fill="#fff"/><path d="M81 46 L83 9 L54 27 Z" fill="#fff"/>` +
+    `<path d="M24 37 L23 19 L38 28 Z" fill="${BUBBLE}" stroke="none"/><path d="M76 37 L77 19 L62 28 Z" fill="${BUBBLE}" stroke="none"/>` +
+    `<ellipse cx="50" cy="58" rx="37" ry="31" fill="#fff"/>` +
+    eye(36) + eye(64) + cheeks(28, 72, 68) +
+    `<path d="M46.5 65 H53.5 L50 68.5 Z" fill="${BUBBLE}" stroke-width="1.8"/>` +
+    (yawn ? `<ellipse cx="50" cy="76" rx="6" ry="7" fill="#C8406F" stroke-width="2.4"/>`
+      : `<path d="M50 68.5 Q50 73 45 72.5 M50 68.5 Q50 73 55 72.5" fill="none" stroke-width="2.4"/>`) +
+    (sleepy > 0.85 ? `<path d="M84 20 h8 l-8 9 h8" fill="none" stroke-width="2.6"/>` : '')));
+}
+
+/** Lock screen: a white kitten fast asleep on a pillow, with a moon and stars (viewBox 0 0 300 220). */
+export function sleepingCatSvg() {
+  return svg('0 0 300 220',
+    ink(4, `<path d="M30 168 C20 140 40 122 70 124 H230 C262 122 282 140 270 168 C262 190 240 196 150 196 C60 196 38 190 30 168 Z" fill="${LILAC}"/>`) +
+    shine(80, 140, 26, 7, 0) +
+    tube('M214 170 C246 170 254 146 238 136', 10, '#fff') +
+    ink(4, `<path d="M96 172 C90 140 118 120 150 120 C186 120 216 136 214 170 Z" fill="#fff"/>`) +
+    `<g transform="translate(78 64) scale(.95)">` + ink(3.5,
+      `<path d="M19 46 L17 9 L46 27 Z" fill="#fff"/><path d="M81 46 L83 9 L54 27 Z" fill="#fff"/>` +
+      `<path d="M24 37 L23 19 L38 28 Z" fill="${BUBBLE}" stroke="none"/><path d="M76 37 L77 19 L62 28 Z" fill="${BUBBLE}" stroke="none"/>` +
+      `<ellipse cx="50" cy="58" rx="37" ry="31" fill="#fff"/>` +
+      `<path d="M29 58 Q36 64 43 58 M57 58 Q64 64 71 58" fill="none" stroke-width="3"/>` + cheeks(29, 71, 68) +
+      `<path d="M46.5 66 H53.5 L50 69.5 Z" fill="${BUBBLE}" stroke-width="1.8"/>`) + `</g>` +
+    ink(3, `<path d="M236 30 a26 26 0 1 0 26 34 a20 20 0 1 1 -26 -34 Z" fill="${GOLD}"/>`) +
+    ink(2.5, `<path d="${star(40, 40, 10, 4.5)}" fill="${GOLD}"/><path d="${star(70, 18, 7, 3)}" fill="#fff"/><path d="${star(196, 22, 7, 3)}" fill="#fff"/>`) +
+    ink(3, `<path d="M182 76 h12 l-12 13 h12 M200 52 h9 l-9 10 h9" fill="none"/>`));
 }

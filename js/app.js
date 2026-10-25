@@ -6,9 +6,11 @@ import { GAMES } from './registry.js';
 import { el, play, holdToActivate, armedButton } from './ui.js';
 import { sound, speak, unlock } from './sound.js';
 import * as storage from './storage.js';
-import { avatarSvg, catFull, mermaidFull, icon, TILE_ART, SCENES, cloudSvg, sparkleSvg, fishSvg } from './art.js';
+import { avatarSvg, catFull, mermaidFull, icon, TILE_ART, SCENES, cloudSvg, sparkleSvg, fishSvg, sleepingCatSvg } from './art.js';
+import * as playtime from './playtime.js';
+import { hardGate } from './gate.js';
 
-export const VERSION = '1.1.0';
+export const VERSION = '1.2.0';
 
 const FULL_ART = { cat: catFull, 'mermaid-girl': mermaidFull };
 
@@ -65,9 +67,12 @@ function appContext(profile) {
 
 function openPicker() {
   current = null;
+  playtime.leave();
   setTheme(null);
-  return show(r => {
+  return show(async r => {
     const last = localStorage.getItem('lastProfile');
+    const asleep = new Set();
+    for (const id of PROFILE_ORDER) if (await playtime.isLocked(id)) asleep.add(id);
     const cards = PROFILE_ORDER.map(id => {
       const p = PROFILES[id];
       const card = el(`button.profile-card.theme-${p.theme}`, {
@@ -84,6 +89,7 @@ function openPicker() {
       el('span.card-art', { innerHTML: (FULL_ART[p.avatar] || (() => avatarSvg(p.avatar)))() }),
       el('span.name-plate', {}, el('span.card-name', {}, p.name), el('span.card-age', {}, `age ${p.age}`)));
       if (id === last) card.classList.add('last');
+      if (asleep.has(id)) card.append(el('span.card-asleep', { 'aria-label': 'Play time is over', innerHTML: icon('moon') }));
       return card;
     });
     const gear = el('button.parent-corner', { 'aria-label': 'Grown-ups: hold for two seconds', innerHTML: icon('gear') });
@@ -95,9 +101,46 @@ function openPicker() {
   });
 }
 
-function enterProfile(p) {
+async function enterProfile(p) {
   try { localStorage.setItem('lastProfile', p.id); } catch {}
-  openHome(p);
+  if (await playtime.enter(p) === 'locked') openLock(p);
+  else openHome(p);
+}
+
+// ---------- play time over ----------
+
+/** Full-screen lock: a sleeping kitten; only the hard maths gate gets past it. */
+function openLock(profile) {
+  current = null;
+  playtime.leave();
+  setTheme(profile.theme);
+  return show(r => {
+    const panel = el('div.lock-panel');
+    const restScreen = () => {
+      sound.lullaby();
+      panel.replaceChildren(
+        el('div.lock-art', { innerHTML: sleepingCatSvg() }),
+        el('h1.lock-title', {}, 'Play time is over.'),
+        el('p.lock-sub', {}, 'Ask Mummy or Daddy.'),
+        el('button.text-btn.lock-parent', { onclick: gateScreen }, 'Grown-ups'));
+    };
+    const gateScreen = () => {
+      panel.replaceChildren(hardGate(choiceScreen), el('button.text-btn', { onclick: restScreen }, 'Back'));
+    };
+    const choiceScreen = async () => {
+      const [limit, st] = await Promise.all([playtime.limitFor(profile.id), playtime.status(profile.id)]);
+      panel.replaceChildren(el('div.gate-box', {},
+        el('h2', {}, `Unlocked for ${profile.name}`),
+        st.capReached ? el('p.muted', {}, `${profile.name} has used today's blocks.`) : null,
+        el('div.lock-choices', {},
+          st.capReached ? null : el('button.text-btn.primary', {
+            onclick: async () => { if (await playtime.unlockNewBlock(profile)) enterProfile(profile); else choiceScreen(); },
+          }, `New ${limit}-minute block`),
+          el('button.text-btn', { onclick: async () => { await playtime.doneForToday(profile); openPicker(); } }, 'Done for today'))));
+    };
+    restScreen();
+    r.append(el('div.lock', {}, panel));
+  });
 }
 
 // ---------- a girl's home ----------
@@ -212,10 +255,34 @@ async function openSettings() {
         return b;
       }));
       const countLabel = el('span', {}, `${count} drawing${count === 1 ? '' : 's'} saved`);
+      const [limit, cap, st] = await Promise.all([playtime.limitFor(id), playtime.capFor(id), playtime.status(id)]);
+      const chips = (values, selected, label, onPick) => {
+        const row = el('div.chip-row', {}, values.map(v => {
+          const b = el('button.choice-chip', {
+            onclick: async () => {
+              await onPick(v);
+              row.querySelectorAll('.selected').forEach(n => n.classList.remove('selected'));
+              b.classList.add('selected');
+            },
+          }, label(v));
+          if (v === selected) b.classList.add('selected');
+          return b;
+        }));
+        return row;
+      };
+      const playNow = st.locked ? 'Play time is over (locked until a grown-up unlocks it)'
+        : st.minutesLeft ? `${st.minutesLeft} min left in the current block` : 'No block running';
+      const playTime = el('div.play-settings', {},
+        el('p.muted', {}, 'Play time per block'),
+        chips(playtime.LIMIT_CHOICES, limit, v => `${v} min`, v => playtime.setLimit(id, v)),
+        el('p.muted', {}, 'Blocks per day'),
+        chips(playtime.CAP_CHOICES, cap, v => (v ? String(v) : 'No limit'), v => playtime.setCap(id, v)),
+        el('p.play-log', {}, `Today: ${st.blocksToday} block${st.blocksToday === 1 ? '' : 's'} started, ${st.minutesToday} min played. ${playNow}.`));
       sections.push(el(`section.settings-card.theme-${p.theme}`, {},
         el('h2', {}, `${p.name} · age ${p.age}`),
         el('p.muted', {}, 'Mascot'),
         avatars,
+        playTime,
         el('div.settings-row', {}, countLabel,
           armedButton('button.text-btn.danger', `Delete all of ${p.name}'s drawings`, 'Tap again to delete them all', async () => {
             await storage.deleteAllDrawings(id);
@@ -231,6 +298,7 @@ async function openSettings() {
         el('h2', {}, 'Tips'),
         el('ul.tips', {},
           el('li', {}, 'Leave a child’s world: hold her mascot in the top-left corner for two seconds.'),
+          el('li', {}, 'Play time: when a block runs out the screen locks. Tap Grown-ups and answer three maths questions to unlock. Changes to block length apply from the next block.'),
           el('li', {}, 'Save Covey’s drawings to Photos: in her gallery, hold a picture for two seconds.'),
           el('li', {}, 'Lock the iPad to this app with Settings › Accessibility › Guided Access, then triple-click the side button.'),
           el('li', {}, 'Updates: open the app once on Wi-Fi after a new version is published, then close and reopen it.'))),
@@ -251,6 +319,7 @@ async function boot() {
     const saved = await storage.getSetting(`avatar:${id}`).catch(() => null);
     if (PROFILES[id].avatars.includes(saved)) PROFILES[id].avatar = saved;   // ignores old emoji choices
   }
+  playtime.setLockHandler(p => openLock(p));
   openPicker();
 
   // While developing, set localStorage.noServiceWorker = 1 to always load fresh files.

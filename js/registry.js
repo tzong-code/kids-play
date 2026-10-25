@@ -6,6 +6,8 @@
 
 import draw from '../games/draw/index.js';
 import colour from '../games/draw/colour.js';
+import stickers from '../games/stickers/index.js';
+import dollhouse from '../games/dollhouse/index.js';
 import gallery from '../games/gallery/index.js';
 
-export const GAMES = [draw, colour, gallery];
+export const GAMES = [draw, colour, stickers, dollhouse, gallery];

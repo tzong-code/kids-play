@@ -44,10 +44,16 @@ To install it on the iPad:
 | `js/sound.js` | Synthesised sounds (Web Audio) and spoken labels (built-in voice), with no audio files |
 | `js/ui.js` | DOM helpers: hold-to-activate, two-tap confirm, share to Photos |
 | `js/registry.js` | The list of games shown on the home screen |
+| `js/stickers.js` | Shared sticker-scene engine: tray, drag in, tap to wiggle, bin, saves per child |
+| `js/playtime.js` | Play blocks, the sleepy-cat countdown, lock state, today's log |
+| `js/gate.js` | Maths keypad and the hard three-question unlock |
 | `games/draw/` | Free draw (`index.js`), colouring pages (`colour.js`), the shared editor (`editor.js`) |
 | `games/gallery/` | Saved drawings |
+| `games/stickers/` | Sticker Scenes (GAME-01): Carrie's castle, Covey's reef |
+| `games/dollhouse/` | Kitty Dollhouse (GAME-02): the house front and 8 rooms |
 | `assets/pages/pages.js` | 60 colouring pages as inline SVG (20 toddler, 40 age-5) |
-| `assets/art/stickers.js` | 54 cartoon stickers (12 mermaid, 12 princess, 30 shared), used as stamps and avatar choices |
+| `assets/art/stickers*.js` | 120 cartoon stickers: stamps, scene stickers, dollhouse items and the five cat friends (Sprinkle, Button, Captain Whisker, Pudding, Mochi) |
+| `assets/art/backdrops.js` | Sticker-scene worlds, the 8 dollhouse rooms and the house front |
 | `assets/fonts/` | Fredoka (rounded font, SIL Open Font License), bundled so it works offline |
 
 ## Look and feel
@@ -61,6 +67,22 @@ The "Chunky Toy" style (thick ink outlines, solid base shadows, glossy highlight
    - `app` gives you `home()`, `open(id, params)`, `sound`, `speak(text)`, `storage`, `exitButton()` (the hold-to-leave mascot) and `label(text)` (empty for the toddler).
 2. Import it in `js/registry.js` and add it to `GAMES`.
 3. Add its files to `FILES` in `sw.js` and bump `CACHE`.
+
+## Play time
+
+Each girl plays in blocks (20 minutes by default). A little cat in the top-right corner slowly gets sleepy, and yawns when 2 minutes are left. When the block runs out, the screen locks and shows a sleeping kitten.
+
+To unlock it:
+1. Tap **Grown-ups**.
+2. Answer three questions in a row: a 2-digit × 1-digit, a 2-digit × 2-digit, and a division. A wrong answer starts again with new questions.
+3. Choose **New block** or **Done for today**.
+
+The block runs on the real clock, so closing or restarting the app doesn't reset it. In Settings you can set:
+- the block length (10, 15, 20 or 30 minutes)
+- the number of blocks per day
+- today's log for each child (blocks started, minutes played)
+
+Settings can't unlock a locked child; only the lock-screen questions can.
 
 ## Grown-up gestures
 

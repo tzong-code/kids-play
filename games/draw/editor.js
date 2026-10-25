@@ -4,10 +4,9 @@
 
 import { Surface } from '../../js/canvas.js';
 import { stampsFor } from '../../js/profiles.js';
-import { icon, stickerUrl } from '../../js/art.js';
+import { icon, stickerUrl, STICKERS } from '../../js/art.js';
 import { el, play, shareFile } from '../../js/ui.js';
 import { PAGES } from '../../assets/pages/pages.js';
-import { STICKERS } from '../../assets/art/stickers.js';
 
 const SAVE_DELAY = 1200;
 
