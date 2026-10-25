@@ -1,10 +1,13 @@
 // The drawing screen shared by free draw, colouring pages and re-opened gallery drawings.
 // Toolbars are built from the profile, so Covey and Carrie get different tools on one engine.
+// Layout: tools on a toy shelf, the paper on its board, colours on a paint tray.
 
 import { Surface } from '../../js/canvas.js';
 import { stampsFor } from '../../js/profiles.js';
+import { icon, stickerUrl } from '../../js/art.js';
 import { el, play, shareFile } from '../../js/ui.js';
 import { PAGES } from '../../assets/pages/pages.js';
+import { STICKERS } from '../../assets/art/stickers.js';
 
 const SAVE_DELAY = 1200;
 
@@ -20,10 +23,12 @@ export async function mountEditor(container, profile, app, params = {}) {
 
   // ---------- layout ----------
   const stage = el('div.stage');
-  const tools = el('div.bar.tools');
-  const palette = el('div.bar.palette');
+  const shelf = el('div.bar-scroll');
+  const paints = el('div.bar-scroll');
+  const tools = el('div.bar.tools', {}, shelf);
+  const palette = el('div.bar.palette', {}, paints);
   const tray = el('div.stamp-tray');
-  const editor = el(`div.editor.age-${profile.age}`, {}, tools, stage, palette, tray);
+  const editor = el(`div.editor.age-${profile.age}`, {}, tools, el('div.board', {}, stage), palette, tray);
   container.append(editor);   // in the DOM now, so the stage has its size for setPage()
 
   let lastBubble = 0;
@@ -73,49 +78,54 @@ export async function mountEditor(container, profile, app, params = {}) {
   }
 
   // ---------- tools ----------
-  const state = { brush: profile.brushes[0], color: profile.palette[0].hex, mode: page ? 'fill' : 'brush', glyph: null };
+  const state = { brush: profile.brushes[0], color: profile.palette[0].hex, mode: page ? 'fill' : 'brush', sticker: null };
   const toolButtons = new Map();
+  const stickers = new Map(stampsFor(profile).map(sid => {
+    const img = new Image();
+    img.src = stickerUrl(sid);
+    return [sid, img];
+  }));
 
   function apply() {
     if (state.mode === 'brush') surface.setTool({ type: 'brush', brush: state.brush.id, width: state.brush.width, color: state.color });
     else if (state.mode === 'eraser') surface.setTool({ type: 'brush', brush: 'eraser', width: profile.eraser.width });
     else if (state.mode === 'fill') surface.setTool({ type: 'fill', color: state.color });
-    else if (state.mode === 'stamp') surface.setTool({ type: 'stamp', glyph: state.glyph, size: surface.tool.size || profile.stampSize });
+    else if (state.mode === 'stamp') surface.setTool({ type: 'stamp', image: stickers.get(state.sticker), size: surface.tool.size || profile.stampSize });
     for (const [key, b] of toolButtons) {
       const on = key === state.mode || (state.mode === 'brush' && key === 'brush:' + state.brush.id);
       b.classList.toggle('selected', on);
     }
-    palette.querySelectorAll('.swatch').forEach(s => s.classList.toggle('selected', s.dataset.hex === state.color));
+    paints.querySelectorAll('.swatch').forEach(s => s.classList.toggle('selected', s.dataset.hex === state.color));
     palette.classList.toggle('dim', state.mode === 'eraser' || state.mode === 'stamp' || (state.mode === 'brush' && state.brush.id === 'rainbow'));
   }
 
-  const toolBtn = (key, icon, label, onclick, extra = '') => {
-    const b = el('button.tool' + extra, {
+  /** A toy button: `art` names the drawn icon and its colour; `key` makes it selectable. */
+  const toolBtn = (key, art, label, onclick) => {
+    const b = el(`button.tool.gloss${profile.showText ? '.has-label' : ''}`, {
       'aria-label': label,
-      onclick: () => { sound.tap(); play(b); if (!profile.showText) speak(label); onclick(); },
-    }, el('span.tool-icon', {}, icon), profile.showText ? el('span.tool-label', {}, label) : null);
+      dataset: { tool: art },
+      onclick: () => { sound.tap(); if (!profile.showText) speak(label); onclick(); },
+    }, el('span.tool-icon', { innerHTML: icon(art) }), profile.showText ? el('span.tool-label', {}, label) : null);
     if (key) toolButtons.set(key, b);
     return b;
   };
 
-  const homeBtn = toolBtn(null, '🏠', 'Home', () => app.home());
-  tools.append(app.exitButton('.corner'), homeBtn, el('span.bar-gap'));
-
+  shelf.append(app.exitButton(), toolBtn(null, 'home', 'Home', () => app.home()));
   for (const brush of profile.brushes) {
-    tools.append(toolBtn('brush:' + brush.id, brush.icon, brush.label, () => { state.mode = 'brush'; state.brush = brush; apply(); }));
+    shelf.append(toolBtn('brush:' + brush.id, brush.icon, brush.label, () => { state.mode = 'brush'; state.brush = brush; apply(); }));
   }
-  if (profile.eraser) tools.append(toolBtn('eraser', profile.eraser.icon, profile.eraser.label, () => { state.mode = 'eraser'; apply(); }));
-  if (profile.fillBucket || page) tools.append(toolBtn('fill', '🪣', 'Fill', () => { state.mode = 'fill'; apply(); }));
-  tools.append(toolBtn('stamp', '⭐', 'Stamps', () => toggleTray()));
+  if (profile.eraser) shelf.append(toolBtn('eraser', 'eraser', profile.eraser.label, () => { state.mode = 'eraser'; apply(); }));
+  if (profile.fillBucket || page) shelf.append(toolBtn('fill', 'fill', 'Fill', () => { state.mode = 'fill'; apply(); }));
+  shelf.append(toolBtn('stamp', 'stamp', 'Stickers', () => toggleTray()));
+  if (profile.sendToPhotos) shelf.append(toolBtn(null, 'photos', 'Photos', sendToPhotos));
 
   let undoBtn, redoBtn;
   if (profile.undo) {
-    undoBtn = toolBtn(null, '↩️', 'Undo', () => surface.undo());
-    redoBtn = toolBtn(null, '↪️', 'Redo', () => surface.redo());
-    tools.append(el('span.bar-gap'), undoBtn, redoBtn);
+    undoBtn = toolBtn(null, 'undo', 'Undo', () => surface.undo());
+    redoBtn = toolBtn(null, 'redo', 'Redo', () => surface.redo());
+    shelf.append(undoBtn, redoBtn);
   }
-  tools.append(el('span.bar-gap'), toolBtn(null, '🧹', 'Clear', clearAll, '.clear'));
-  if (profile.sendToPhotos) tools.append(toolBtn(null, '📸', 'Photos', sendToPhotos, '.photos'));
+  shelf.append(toolBtn(null, 'clear', 'Clear', clearAll));
 
   function refreshUndo() {
     if (!undoBtn) return;
@@ -124,7 +134,7 @@ export async function mountEditor(container, profile, app, params = {}) {
   }
   refreshUndo();
 
-  // ---------- palette ----------
+  // ---------- paint tray ----------
   for (const c of profile.palette) {
     const s = el('button.swatch', {
       'aria-label': c.name,
@@ -140,21 +150,26 @@ export async function mountEditor(container, profile, app, params = {}) {
         apply();
       },
     });
-    palette.append(s);
+    paints.append(s);
   }
 
-  // ---------- stamps tray ----------
-  for (const glyph of stampsFor(profile)) {
+  // ---------- sticker tray ----------
+  for (const [sid, img] of stickers) {
     const b = el('button.stamp-choice', {
-      onclick: () => {
+      'aria-label': STICKERS[sid].label,
+      onclick: async () => {
         sound.pop();
+        if (!profile.showText) speak(STICKERS[sid].label);
+        await img.decode().catch(() => {});
         state.mode = 'stamp';
-        state.glyph = glyph;
+        state.sticker = sid;
         apply();
-        toolButtons.get('stamp').querySelector('.tool-icon').textContent = glyph;
+        const btn = toolButtons.get('stamp');
+        btn.querySelector('.tool-icon').replaceChildren(el('img', { src: img.src, alt: '', draggable: false }));
+        play(btn);
         toggleTray(false);
       },
-    }, glyph);
+    }, el('img', { src: img.src, alt: '', draggable: false }));
     tray.append(b);
   }
   function toggleTray(force) {
@@ -178,7 +193,7 @@ export async function mountEditor(container, profile, app, params = {}) {
       } else {
         surface.clear();
       }
-    }, 450);
+    }, 480);
   }
 
   function sendToPhotos() {

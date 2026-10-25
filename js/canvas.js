@@ -1,5 +1,5 @@
 // Drawing engine: a square paint layer under an outline layer (colouring pages),
-// with brushes, flood fill, emoji stamps, region-based undo/redo and PNG export.
+// with brushes, flood fill, sticker stamps, region-based undo/redo and PNG export.
 //
 // The document is a fixed square whose side is the screen's long edge, centred in the
 // stage. Rotating the iPad only changes which part is visible, so nothing is ever lost.
@@ -7,7 +7,6 @@
 const MAX_BACKING = 2048;      // cap backing pixels per side to keep memory sane on iPad
 const UNDO_LIMIT = 30;
 const UNDO_BYTES = 120e6;
-const STAMP_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export class Surface {
   /**
@@ -492,9 +491,10 @@ export class Surface {
   // ---------- stamps ----------
 
   _beginStamp(p, e) {
-    const el = document.createElement('div');
+    const el = document.createElement('img');
     el.className = 'stamp-ghost';
-    el.textContent = this.tool.glyph;
+    el.src = this.tool.image.src;
+    el.alt = '';
     this.wrap.append(el);
     this.stampDrag = { el, p, size: this.tool.size || 90, pinch: null };
     this._placeGhost();
@@ -520,7 +520,7 @@ export class Surface {
   _placeGhost() {
     const s = this.stampDrag;
     const k = 1 / this.scale;
-    s.el.style.fontSize = s.size + 'px';
+    s.el.style.width = s.el.style.height = s.size + 'px';
     s.el.style.left = s.p.x * k + 'px';
     s.el.style.top = s.p.y * k + 'px';
   }
@@ -530,14 +530,8 @@ export class Surface {
     this.stampDrag = null;
     s.el.remove();
     const size = s.size * this.scale;
-    const ctx = this.pctx;
-    ctx.save();
-    ctx.font = `${size}px ${STAMP_FONT}`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(this.tool.glyph, s.p.x, s.p.y);
-    ctx.restore();
-    this._commit({ x: s.p.x - size * 0.75, y: s.p.y - size * 0.75, w: size * 1.5, h: size * 1.5 });
+    this.pctx.drawImage(this.tool.image, s.p.x - size / 2, s.p.y - size / 2, size, size);
+    this._commit({ x: s.p.x - size * 0.6, y: s.p.y - size * 0.6, w: size * 1.2, h: size * 1.2 });
     if (this.opts.multiTouch) this.tool.size = s.size;
     this.opts.onStroke?.('stamp', { x: s.p.x / this.scale, y: s.p.y / this.scale, size: s.size });
   }

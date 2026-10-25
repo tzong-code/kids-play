@@ -14,7 +14,7 @@ function pagesFor(profile) {
 export default {
   id: 'colour',
   name: 'Colour',
-  icon: '🎨',
+  icon: 'colour',
   ages: [2, 3, 4, 5, 6, 7, 8],
   async mount(container, profile, app, params) {
     if (params.pageId) return mountEditor(container, profile, app, params);
@@ -32,7 +32,7 @@ export default {
       grid.append(tile);
     }
     container.append(el('div.picker-screen', {},
-      el('div.screen-top', {}, app.exitButton(), el('button.tool.home-btn', { onclick: () => app.home(), 'aria-label': 'Home' }, el('span.tool-icon', {}, '🏠')),
+      el('div.screen-top', {}, app.exitButton(), app.homeButton(),
         profile.showText ? el('h1', {}, 'Pick a picture') : null),
       grid));
   },

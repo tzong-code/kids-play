@@ -6,8 +6,11 @@ import { GAMES } from './registry.js';
 import { el, play, holdToActivate, armedButton } from './ui.js';
 import { sound, speak, unlock } from './sound.js';
 import * as storage from './storage.js';
+import { avatarSvg, catFull, mermaidFull, icon, TILE_ART, SCENES, cloudSvg, sparkleSvg, fishSvg } from './art.js';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
+
+const FULL_ART = { cat: catFull, 'mermaid-girl': mermaidFull };
 
 const root = document.getElementById('app');
 let cleanup = null;
@@ -44,10 +47,16 @@ function appContext(profile) {
     open: (id, params) => openGame(id, params),
     /** The avatar in the top-left corner: hold it two seconds to leave this profile. */
     exitButton: (extraClass = '') => {
-      const b = el('button.avatar-btn' + extraClass, { 'aria-label': 'Hold to switch child' }, el('span.avatar-face', {}, profile.avatar));
+      const b = el('button.avatar-btn' + extraClass, { 'aria-label': 'Hold to switch child' }, el('span.avatar-art', { innerHTML: avatarSvg(profile.avatar) }));
       holdToActivate(b, () => openPicker());
       return b;
     },
+    /** Round toy button back to her home screen. */
+    homeButton: () => el('button.tool.gloss', {
+      'aria-label': 'Home',
+      dataset: { tool: 'home' },
+      onclick: () => { sound.tap(); openHome(profile); },
+    }, el('span.tool-icon', { innerHTML: icon('home') })),
     label: text => (profile.showText ? text : ''),
   };
 }
@@ -70,13 +79,14 @@ function openPicker() {
           setTimeout(() => enterProfile(p), 250);
         },
       },
-      el('span.card-avatar', {}, p.avatar),
-      el('span.card-name', {}, p.name),
-      el('span.card-age', {}, `age ${p.age}`));
+      el('span.card-top', {}, el('span'), el('span'), el('span')),
+      ...['tl', 'tr', 'bl', 'br'].map(c => el(`span.rivet.${c}`)),
+      el('span.card-art', { innerHTML: (FULL_ART[p.avatar] || (() => avatarSvg(p.avatar)))() }),
+      el('span.name-plate', {}, el('span.card-name', {}, p.name), el('span.card-age', {}, `age ${p.age}`)));
       if (id === last) card.classList.add('last');
       return card;
     });
-    const gear = el('button.parent-corner', { 'aria-label': 'Grown-ups: hold for two seconds' }, '⚙️');
+    const gear = el('button.parent-corner', { 'aria-label': 'Grown-ups: hold for two seconds', innerHTML: icon('gear') });
     holdToActivate(gear, () => openGate());
     r.append(el('div.picker', {},
       gear,
@@ -106,15 +116,40 @@ function openHome(profile) {
           play(tile, 'bounce');
           setTimeout(() => openGame(g.id), 180);
         },
-      }, el('span.tile-icon', {}, g.icon), profile.showText ? el('span.tile-label', {}, g.name) : null);
+      }, tileArt(g.icon), profile.showText ? el('span.tile-label', {}, g.name) : null);
       return tile;
     });
     r.append(el('div.home', {},
+      sceneBits(profile.theme),
+      el('div.scene', { 'aria-hidden': 'true', innerHTML: SCENES[profile.theme]() }),
       el('div.home-top', {}, app.exitButton(),
         profile.showText ? el('h1.home-hello', {}, `Hi ${profile.name}!`) : null),
-      el('div.home-tiles', {}, tiles),
-      el('div.home-scene', { 'aria-hidden': 'true' })));
+      el('div.home-tiles', {}, tiles)));
   });
+}
+
+/** A drawn tile picture, or the plain icon for games that don't have art yet. */
+function tileArt(key) {
+  return TILE_ART[key] ? el('span.tile-art', { innerHTML: TILE_ART[key]() }) : el('span.tile-art', { style: { fontSize: '96px', textAlign: 'center' } }, key);
+}
+
+/** Moving bits behind the tiles: drifting clouds and sparkles, or bubbles and fish. */
+function sceneBits(theme) {
+  const bits = el('div.scene-bits', { 'aria-hidden': 'true' });
+  if (theme === 'princess') {
+    bits.append(el('div.cloud.c1', { innerHTML: cloudSvg() }), el('div.cloud.c2', { innerHTML: cloudSvg() }));
+    for (const [x, y, d] of [[16, 30, 0], [78, 18, 0.8], [88, 42, 1.6], [30, 12, 2.2], [62, 34, 1.2]]) {
+      bits.append(el('div.twinkle', { innerHTML: sparkleSvg('#fff'), style: { left: x + '%', top: y + '%', animationDelay: `-${d}s` } }));
+    }
+  } else {
+    bits.append(el('div.light-rays'));
+    for (const [x, size, dur, delay] of [[8, 22, 9, 0], [22, 16, 12, 4], [70, 26, 10, 2], [86, 18, 13, 7], [52, 14, 11, 5]]) {
+      bits.append(el('div.bubble', { style: { left: x + '%', width: size + 'px', height: size + 'px', animationDuration: dur + 's', animationDelay: `-${delay}s` } }));
+    }
+    bits.append(el('div.swimmer', { innerHTML: fishSvg(), style: { top: '20%', animationDuration: '26s' } }));
+    bits.append(el('div.swimmer', { innerHTML: fishSvg('#FF8FB8', '#B78CFF'), style: { top: '52%', width: '80px', animationDuration: '34s', animationDelay: '-15s' } }));
+  }
+  return bits;
 }
 
 function openGame(id, params = {}) {
@@ -172,7 +207,7 @@ async function openSettings() {
             avatars.querySelectorAll('.selected').forEach(n => n.classList.remove('selected'));
             b.classList.add('selected');
           },
-        }, a);
+        }, el('span.avatar-art', { innerHTML: avatarSvg(a) }));
         if (a === p.avatar) b.classList.add('selected');
         return b;
       }));
@@ -214,7 +249,7 @@ async function boot() {
   storage.persist();
   for (const id of PROFILE_ORDER) {
     const saved = await storage.getSetting(`avatar:${id}`).catch(() => null);
-    if (saved) PROFILES[id].avatar = saved;
+    if (PROFILES[id].avatars.includes(saved)) PROFILES[id].avatar = saved;   // ignores old emoji choices
   }
   openPicker();
 

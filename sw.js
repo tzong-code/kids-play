@@ -1,7 +1,7 @@
 // Service worker: caches every app file on first load so the app opens with no network.
 // Bump CACHE on every release; the next open on Wi-Fi fetches the new files.
 
-const CACHE = 'kids-play-v1';
+const CACHE = 'kids-play-v2';
 
 const FILES = [
   './',
@@ -9,6 +9,7 @@ const FILES = [
   'manifest.json',
   'css/app.css',
   'js/app.js',
+  'js/art.js',
   'js/canvas.js',
   'js/profiles.js',
   'js/registry.js',
@@ -20,6 +21,8 @@ const FILES = [
   'games/draw/editor.js',
   'games/gallery/index.js',
   'assets/pages/pages.js',
+  'assets/art/stickers.js',
+  'assets/fonts/fredoka-700.woff2',
   'assets/icons/icon-180.png',
   'assets/icons/icon-192.png',
   'assets/icons/icon-512.png',

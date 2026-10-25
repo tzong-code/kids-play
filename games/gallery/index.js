@@ -3,11 +3,12 @@
 // Carrie can re-open, send to Photos, and delete with a two-tap confirm.
 
 import { el, play, holdToActivate, armedButton, shareFile } from '../../js/ui.js';
+import { icon, TILE_ART } from '../../js/art.js';
 
 export default {
   id: 'gallery',
   name: 'My Art',
-  icon: '🖼️',
+  icon: 'gallery',
   ages: [2, 3, 4, 5, 6, 7, 8],
   async mount(container, profile, app) {
     const { storage, sound } = app;
@@ -18,7 +19,7 @@ export default {
     const grid = el('div.gallery-grid');
     const viewer = el('div.viewer');
     const screen = el('div.picker-screen.gallery', {},
-      el('div.screen-top', {}, app.exitButton(), el('button.tool.home-btn', { onclick: () => app.home(), 'aria-label': 'Home' }, el('span.tool-icon', {}, '🏠')),
+      el('div.screen-top', {}, app.exitButton(), app.homeButton(),
         profile.showText ? el('h1', {}, 'My Art') : null),
       grid, viewer);
     container.append(screen);
@@ -28,8 +29,8 @@ export default {
       const items = await storage.listDrawings(profile.id);
       grid.replaceChildren();
       if (!items.length) {
-        grid.append(el('div.empty', {}, el('span.empty-icon', {}, '🖍️'), profile.showText ? el('p', {}, 'Your drawings will show up here.') : null,
-          el('button.home-tile.small', { onclick: () => app.open('draw') }, el('span.tile-icon', {}, '✏️'))));
+        grid.append(el('div.empty', {}, profile.showText ? el('p', {}, 'Your drawings will show up here!') : null,
+          el('button.home-tile.small', { onclick: () => app.open('draw'), 'aria-label': 'Draw' }, el('span.tile-art', { innerHTML: TILE_ART.draw() }))));
         return;
       }
       for (const rec of items) {
@@ -53,19 +54,24 @@ export default {
       const img = el('img.viewer-img', { src: url(full.image), alt: '', draggable: false });
       const close = () => { viewer.classList.remove('open'); viewer.replaceChildren(); };
       const actions = el('div.viewer-actions');
-      const btn = (icon, label, onclick, extra = '') =>
-        el('button.tool' + extra, { onclick, 'aria-label': label }, el('span.tool-icon', {}, icon), profile.showText ? el('span.tool-label', {}, label) : null);
+      const labelled = profile.showText ? '.has-label' : '';
+      const btn = (art, label, onclick) =>
+        el(`button.tool.gloss${labelled}`, { onclick, 'aria-label': label, dataset: { tool: art } },
+          el('span.tool-icon', { innerHTML: icon(art) }), profile.showText ? el('span.tool-label', {}, label) : null);
 
-      actions.append(btn('✖️', 'Close', () => { sound.tap(); close(); }));
-      if (profile.galleryReopen) actions.append(btn('✏️', 'Keep drawing', () => { sound.pop(); app.open('draw', { drawingId: full.id }); }));
-      if (profile.sendToPhotos) actions.append(btn('📸', 'Photos', () => { sound.tada(); shareFile(file); }, '.photos'));
+      actions.append(btn('close', 'Close', () => { sound.tap(); close(); }));
+      if (profile.galleryReopen) actions.append(btn('keep', 'Draw', () => { sound.pop(); app.open('draw', { drawingId: full.id }); }));
+      if (profile.sendToPhotos) actions.append(btn('photos', 'Photos', () => { sound.tada(); shareFile(file); }));
       if (profile.galleryDelete) {
-        actions.append(armedButton('button.tool.danger',
-          [el('span.tool-icon', {}, '🗑️'), el('span.tool-label', {}, 'Delete')],
-          [el('span.tool-icon', {}, '🗑️'), el('span.tool-label', {}, 'Sure?')],
-          async () => { sound.whoosh(); await storage.deleteDrawing(full.id); close(); render(); }));
+        const del = armedButton(`button.tool.gloss${labelled}`,
+          [el('span.tool-icon', { innerHTML: icon('trash') }), el('span.tool-label', {}, 'Delete')],
+          [el('span.tool-icon', { innerHTML: icon('trash') }), el('span.tool-label', {}, 'Sure?')],
+          async () => { sound.whoosh(); await storage.deleteDrawing(full.id); close(); render(); });
+        del.dataset.tool = 'delete';
+        del.setAttribute('aria-label', 'Delete');
+        actions.append(del);
       }
-      viewer.replaceChildren(el('div.viewer-backdrop', { onclick: close }), el('div.viewer-card', {}, img, actions));
+      viewer.replaceChildren(el('div.viewer-backdrop', { onclick: close }), el('div.viewer-card', {}, el('div.viewer-frame', {}, img), actions));
       viewer.classList.add('open');
       play(img, 'bounce');
     }

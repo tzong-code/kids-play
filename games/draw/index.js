@@ -6,7 +6,7 @@ import { mountEditor } from './editor.js';
 export default {
   id: 'draw',
   name: 'Draw',
-  icon: '🖍️',
+  icon: 'draw',          // key into TILE_ART in js/art.js
   ages: [2, 3, 4, 5, 6, 7, 8],
   mount: (container, profile, app, params) => mountEditor(container, profile, app, params),
 };

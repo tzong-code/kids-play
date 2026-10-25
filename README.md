@@ -40,12 +40,19 @@ To install it on the iPad:
 | `js/profiles.js` | Age presets: palette, brushes, tools, page set, stamps. Add a child or bump an age here |
 | `js/canvas.js` | Drawing engine: brushes, pressure, palm rejection, flood fill, stamps, undo/redo, export |
 | `js/storage.js` | IndexedDB: drawings (PNG blobs) and settings |
+| `js/art.js` | Hand-drawn SVG art: the mascots (Carrie's white cat, Covey's mermaid), tool icons, home-tile pictures, castle and ocean scenes |
 | `js/sound.js` | Synthesised sounds (Web Audio) and spoken labels (built-in voice), with no audio files |
 | `js/ui.js` | DOM helpers: hold-to-activate, two-tap confirm, share to Photos |
 | `js/registry.js` | The list of games shown on the home screen |
 | `games/draw/` | Free draw (`index.js`), colouring pages (`colour.js`), the shared editor (`editor.js`) |
 | `games/gallery/` | Saved drawings |
 | `assets/pages/pages.js` | 60 colouring pages as inline SVG (20 toddler, 40 age-5) |
+| `assets/art/stickers.js` | 54 cartoon stickers (12 mermaid, 12 princess, 30 shared), used as stamps and avatar choices |
+| `assets/fonts/` | Fredoka (rounded font, SIL Open Font License), bundled so it works offline |
+
+## Look and feel
+
+The "Chunky Toy" style (thick ink outlines, solid base shadows, glossy highlights, springy presses) was designed in Superdesign. Its design system lives in `.superdesign/design-system.md`, which is kept out of git. The project's drafts are on the Superdesign canvas. To change a colour, edit the tokens at the top of `css/app.css`. Each tool button's colour comes from its `data-tool` attribute.
 
 ## Adding a game
 
