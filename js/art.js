@@ -285,6 +285,17 @@ export const TILE_ART = {
     `<rect x="28" y="84" width="26" height="18" rx="5" fill="${MINT}"/>` +
     `<path d="M68 108 V90 a10 10 0 0 1 20 0 V108 Z" fill="${CREAM}"/>`) +
     eyes(52, 68, 38, 2.4, 3) + ink(2.4, `<path d="M56 44 Q60 47 64 44" fill="none"/>`) + shine(36, 32, 7, 2.5, -30)),
+  giraffe: () => svg('0 0 120 120', ink(3.5,
+    `<path d="M44 118 C46 96 50 78 54 62 L74 64 C72 82 72 100 74 118 Z" fill="#F7C948"/>` +
+    `<ellipse cx="58" cy="90" rx="5" ry="4" fill="#E0A83A" stroke="none"/><ellipse cx="66" cy="106" rx="5" ry="4" fill="#E0A83A" stroke="none"/>` +
+    `<path d="M40 40 C30 30 20 32 22 40 C24 48 34 48 42 46 Z" fill="#E9B93A"/>` +
+    `<path d="M54 22 L52 8 M70 20 L72 6" fill="none" stroke="#8A5A2B" stroke-width="6"/>` +
+    `<circle cx="51" cy="6" r="5.5" fill="#8A5A2B"/><circle cx="73" cy="4" r="5.5" fill="#8A5A2B"/>` +
+    `<ellipse cx="62" cy="42" rx="26" ry="23" fill="#F7C948"/>` +
+    `<ellipse cx="80" cy="54" rx="19" ry="14" fill="#FFE6A3"/>` +
+    `<circle cx="84" cy="50" r="2" fill="${INK}" stroke="none"/><circle cx="92" cy="52" r="2" fill="${INK}" stroke="none"/>` +
+    `<path d="M76 61 Q82 66 88 60" fill="none" stroke-width="2.6"/>`) +
+    eyes(55, 70, 42, 4.6, 5.6) + `<ellipse cx="46" cy="54" rx="5" ry="3" fill="#FFD9E8"/>` + shine(52, 28, 6, 2.4)),
   gallery: () => svg('0 0 120 120',
     ink(3, `<path d="M26 32 L60 10 L94 32" fill="none"/><circle cx="60" cy="10" r="4.5" fill="${PINK}"/>`) + ink(3.5,
       `<rect x="14" y="30" width="92" height="78" rx="12" fill="${GOLD}"/>` +

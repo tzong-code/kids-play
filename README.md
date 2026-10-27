@@ -51,6 +51,7 @@ To install it on the iPad:
 | `games/gallery/` | Saved drawings |
 | `games/stickers/` | Sticker Scenes (GAME-01): Carrie's castle, Covey's reef |
 | `games/dollhouse/` | Kitty Dollhouse (GAME-02): the house front and 8 rooms |
+| `games/giraffe/` | Gigi the Giraffe (GAME-03): `giraffe.js` (Gigi and her savanna, name constant), `idle.js` (breathing, blinks, sleep), `scenes.js` (the six cancellable action scenes), `props.js` (scene art and the jungle) |
 | `assets/pages/pages.js` | 60 colouring pages as inline SVG (20 toddler, 40 age-5) |
 | `assets/art/stickers*.js` | 120 cartoon stickers: stamps, scene stickers, dollhouse items and the five cat friends (Sprinkle, Button, Captain Whisker, Pudding, Mochi) |
 | `assets/art/backdrops.js` | Sticker-scene worlds, the 8 dollhouse rooms and the house front |
