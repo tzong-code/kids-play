@@ -334,6 +334,14 @@ export const TILE_ART = {
     `<circle cx="34" cy="70" r="10" fill="${INK}"/><path d="M60 60 L72 80 H48 Z" fill="${INK}"/><rect x="78" y="60" width="20" height="20" rx="4" fill="${INK}"/>`) +
     eyes(48, 72, 44, 2.6, 3.2) +
     ink(3.5, `<path d="${star(84, 100, 16, 7)}" fill="${LILAC}"/><circle cx="30" cy="104" r="12" fill="${RED}"/>`) + shine(26, 36, 8, 3, 0)),
+  sizes: () => {
+    const kit = (cx, base, r, c) => ink(3,
+      `<path d="M${cx - r * 0.9} ${base - r * 1.6} L${cx - r * 0.8} ${base - r * 2.5} L${cx - r * 0.2} ${base - r * 2} Z M${cx + r * 0.9} ${base - r * 1.6} L${cx + r * 0.8} ${base - r * 2.5} L${cx + r * 0.2} ${base - r * 2} Z" fill="${c}"/>` +
+      `<ellipse cx="${cx}" cy="${base - r * 1.4}" rx="${r}" ry="${r * 0.85}" fill="${c}"/><path d="M${cx - r * 0.8} ${base} C${cx - r} ${base - r * 0.8} ${cx + r} ${base - r * 0.8} ${cx + r * 0.8} ${base} Z" fill="${c}"/>`) +
+      eyes(cx - r * 0.38, cx + r * 0.38, base - r * 1.45, r * 0.13, r * 0.17);
+    return svg('0 0 120 120', ink(3.5, `<rect x="6" y="98" width="108" height="12" rx="6" fill="#E8B575"/>`) +
+      kit(22, 100, 12, '#fff') + kit(52, 100, 17, '#FFB259') + kit(90, 100, 24, '#B8B3C7'));
+  },
   gallery: () => svg('0 0 120 120',
     ink(3, `<path d="M26 32 L60 10 L94 32" fill="none"/><circle cx="60" cy="10" r="4.5" fill="${PINK}"/>`) + ink(3.5,
       `<rect x="14" y="30" width="92" height="78" rx="12" fill="${GOLD}"/>` +

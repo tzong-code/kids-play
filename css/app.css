@@ -1837,3 +1837,57 @@ body.timer-on .editor .bar.palette { margin-top: 70px; }
 .ss-block.dragging > svg { transform: scale(1.12) rotate(-8deg); }
 .ss-block.ss-in { pointer-events: none; }
 .ss-block.ss-in > svg { transform: scale(.25); opacity: 0; }
+
+/* ---------- Big and Small (GAME-05e) ---------- */
+
+.bs-game { grid-template-rows: auto 1fr; }
+.bs-stage { position: absolute; inset: 0; touch-action: none; }
+.bs-stage > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* Homes stand on the floor, the things to sort wait above (Superdesign draft). */
+.bs-targets, .bs-items {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+.bs-targets { bottom: 5%; }
+.bs-items { top: 5%; height: 40%; }
+.bs-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.bs-target, .bs-item {
+  position: relative;
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.bs-target > svg, .bs-item > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.bs-target.bs-squish { animation: bounce .3s ease; }
+.bs-item { filter: drop-shadow(0 6px 0 rgba(43, 35, 64, .14)); }
+.bs-item > svg { transition: transform .3s var(--spring), opacity .3s; }
+.bs-item.dragging { z-index: 5; }
+.bs-item.dragging > svg { transform: scale(1.1) rotate(-8deg); }
+.bs-item.bs-gone { pointer-events: none; }
+.bs-item.bs-gone > svg { transform: scale(.3); opacity: 0; }
+.bs-item.bs-stays { pointer-events: none; }
+/* shared cat art: no halo, mouth shut */
+.bs-stage .ks-halo, .bs-stage .ks-open { display: none; }
+
+/* beds: the sleeper curls up when the cat is home */
+.bs-target .bs-sleeper { opacity: 0; transform: translateY(10px); transform-box: view-box; transition: opacity .3s, transform .4s var(--spring); }
+.bs-target.home .bs-sleeper { opacity: 1; transform: none; }
+.bs-target.home .bs-zzz { animation: bs-zzz 1.6s ease-in-out infinite; transform-box: fill-box; }
+@keyframes bs-zzz { 0%, 100% { opacity: .3; transform: translateY(4px); } 50% { opacity: 1; transform: translateY(-6px); } }
+/* bowls: the fish swims inside */
+.bs-in-bowl { position: absolute; left: 27%; top: 52%; width: 46%; aspect-ratio: 160 / 110; opacity: 0; transition: opacity .3s; }
+.bs-in-bowl > svg { width: 100%; height: 100%; display: block; }
+.bs-target.home .bs-in-bowl { opacity: 1; animation: cm-paddle 3s ease-in-out infinite alternate; }
+/* hats: the hat lands on the cat's head */
+.bs-hat-on { position: absolute; left: 24%; width: 52%; top: -9%; aspect-ratio: 120 / 100; opacity: 0; transform: translateY(-30px); transition: opacity .2s, transform .4s var(--spring); }
+.bs-hat-on > svg { width: 100%; height: 100%; display: block; }
+.bs-target.home .bs-hat-on { opacity: 1; transform: none; }
