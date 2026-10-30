@@ -323,6 +323,11 @@ export const TILE_ART = {
     ink(3.5, `<path d="M8 58 L20 44 H100 L112 58 Z" fill="#C98F55"/><rect x="12" y="56" width="96" height="56" rx="8" fill="#E8B575"/>` +
       `<path d="M8 58 L-2 40 L20 44 Z M112 58 L120 38 L100 44 Z" fill="#E8B575"/>`) +
     `<path d="M40 86 a12 12 0 0 0 24 0" fill="none" stroke="#C98F55" stroke-width="5"/>` + shine(26, 70, 8, 3, 0)),
+  colourMatch: () => svg('0 0 120 120',
+    `<circle cx="60" cy="68" r="44" fill="#D3E6FF"/>` + ink(3.5, `<circle cx="60" cy="68" r="44" fill="none"/><rect x="32" y="16" width="56" height="14" rx="7" fill="${BLUE}"/>`) +
+    ink(3, `<path d="M40 72 L26 60 V84 Z" fill="${RED}"/><ellipse cx="62" cy="72" rx="24" ry="17" fill="${RED}"/>`) +
+    `<circle cx="74" cy="67" r="3.4" fill="${INK}"/>` + shine(40, 46, 9, 4) +
+    ink(2.5, `<circle cx="88" cy="44" r="5" fill="#fff"/><circle cx="96" cy="32" r="3.5" fill="#fff"/>`)),
   gallery: () => svg('0 0 120 120',
     ink(3, `<path d="M26 32 L60 10 L94 32" fill="none"/><circle cx="60" cy="10" r="4.5" fill="${PINK}"/>`) + ink(3.5,
       `<rect x="14" y="30" width="92" height="78" rx="12" fill="${GOLD}"/>` +

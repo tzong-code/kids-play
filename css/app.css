@@ -1647,3 +1647,111 @@ body.timer-on .editor .bar.palette { margin-top: 70px; }
 .pb-tail > svg { width: 100%; height: 100%; overflow: visible; }
 .pb-tail.show { opacity: 1; transform: rotate(var(--r)) scale(1); animation: pb-swish 1s ease-in-out .4s infinite alternate; }
 @keyframes pb-swish { from { transform: rotate(var(--r)); } to { transform: rotate(calc(var(--r) + 18deg)); } }
+
+/* ---------- Colour Match (GAME-05c) ---------- */
+
+.cm-game { grid-template-rows: auto 1fr; }
+.cm-stage {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  --fish: 130px;
+  --bowl: 180px;
+  background:
+    radial-gradient(#FFD3E6 6px, transparent 7px) 0 0 / 56px 56px,
+    radial-gradient(#FFD3E6 6px, transparent 7px) 28px 28px / 56px 56px,
+    #FFF1F7;
+}
+/* Tank on top, bowls on a shelf below (Superdesign draft). */
+.cm-tank {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 0;
+  bottom: 40%;
+  overflow: hidden;
+  border: 4px solid var(--ink);
+  border-top: 0;
+  border-radius: 0 0 30px 30px;
+  background: linear-gradient(180deg, #E6F8FF, #C9EEFA);
+  box-shadow: 0 8px 0 rgba(43, 35, 64, .1);
+}
+.cm-rays { position: absolute; inset: 0; background: repeating-linear-gradient(105deg, transparent 0 90px, rgba(255, 255, 255, .45) 90px 130px, transparent 130px 240px); }
+.cm-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; }
+.cm-floor > svg { width: 100%; height: 100%; display: block; }
+.cm-bubble {
+  position: absolute;
+  bottom: 10%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  opacity: .8;
+  animation: cm-rise 6s linear infinite;
+}
+@keyframes cm-rise { from { transform: translateY(0); opacity: 0; } 10% { opacity: .8; } to { transform: translateY(-60vh) translateX(10px); opacity: 0; } }
+.cm-shelf {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 5%;
+  height: 26px;
+  border: 4px solid var(--ink);
+  border-radius: 13px;
+  background: #E8B575;
+  box-shadow: 0 6px 0 rgba(43, 35, 64, .12);
+}
+.cm-bowls {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: calc(5% + 18px);
+  height: 31%;
+  display: grid;
+  grid-template-columns: repeat(var(--per, 2), var(--bowl));
+  justify-content: space-evenly;
+  align-content: end;
+  row-gap: 8px;
+}
+@media (orientation: portrait) {
+  .cm-tank { bottom: 46%; }
+  .cm-bowls { height: 37%; left: 4%; right: 4%; }
+  .cm-shelf { left: 4%; right: 4%; }
+}
+.cm-bowl {
+  position: relative;
+  flex: none;
+  width: var(--bowl);
+  height: var(--bowl);
+  padding: 0;
+  border: 0;
+  background: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.cm-bowl > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cm-inside { position: absolute; left: 14%; right: 14%; top: 34%; bottom: 8%; overflow: hidden; border-radius: 0 0 50% 50%; pointer-events: none; }
+.cm-mini { position: absolute; width: 46%; aspect-ratio: 160 / 110; left: 26%; animation: cm-paddle 3s ease-in-out infinite alternate; }
+.cm-mini > svg { width: 100%; height: 100%; }
+@keyframes cm-paddle { from { transform: translateX(-40%); } 49% { transform: translateX(40%); } 50% { transform: translateX(40%) scaleX(-1); } to { transform: translateX(-40%) scaleX(-1); } }
+.cm-pop { position: absolute; bottom: 10%; width: 12px; height: 12px; border: 2.5px solid #fff; border-radius: 50%; animation: cm-pop 1.4s ease-out both; }
+@keyframes cm-pop { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-120px); opacity: 0; } }
+
+.cm-fishes, .cm-fx { position: absolute; inset: 0; pointer-events: none; }
+.cm-fx { overflow: hidden; }
+.cm-fish {
+  position: absolute;
+  width: var(--fish);
+  height: calc(var(--fish) * .8);
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  touch-action: none;
+  filter: drop-shadow(0 5px 0 rgba(43, 35, 64, .12));
+}
+.cm-fish.dragging { z-index: 5; }
+.cm-fish-art { width: 100%; aspect-ratio: 160 / 110; transition: transform .25s var(--spring); }
+.cm-fish-art > svg { width: 100%; height: 100%; display: block; }
+.cm-fish.left .cm-fish-art { transform: scaleX(-1); }
+.cm-fish.dragging .cm-fish-art { transform: scale(1.15) rotate(-10deg); }
+.cm-fish.dragging.left .cm-fish-art { transform: scale(-1.15, 1.15) rotate(10deg); }
