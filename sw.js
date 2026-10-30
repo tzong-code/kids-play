@@ -1,7 +1,7 @@
 // Service worker: caches every app file on first load so the app opens with no network.
 // Bump CACHE on every release; the next open on Wi-Fi fetches the new files.
 
-const CACHE = 'kids-play-v7';
+const CACHE = 'kids-play-v8';
 
 const FILES = [
   './',

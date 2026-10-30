@@ -152,7 +152,7 @@ export default {
       f.node.remove();
       const mini = el('div.cm-mini', { innerHTML: fishSvg(f.c) });
       mini.style.animationDelay = `-${Math.random() * 3}s`;
-      mini.style.top = 30 + bowl.inside.children.length * 22 + '%';
+      mini.style.top = 30 + bowl.inside.querySelectorAll('.cm-mini').length * 22 + '%';   // count fish only, not bubbles
       bowl.inside.append(mini);
       sound.splash();
       say(f.c.name);
