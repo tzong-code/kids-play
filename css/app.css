@@ -1566,3 +1566,84 @@ body.timer-on .editor .bar.palette { margin-top: 70px; }
 
 .tile-stars { display: flex; gap: 2px; justify-content: center; }
 .tile-star { width: 20px; height: 20px; fill: #fff; stroke: #B9AECB; }
+
+/* ---------- Peekaboo Cats (GAME-05b) ---------- */
+
+.pb-game { grid-template-rows: auto 1fr; }
+.pb-room { position: absolute; inset: 0; touch-action: none; }
+.pb-room > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pb-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+/* Room layout from the Superdesign draft: box, curtain, bed, plant, left to right. */
+.pb-place {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(0 6px 0 rgba(43, 35, 64, .12));
+}
+.pb-box { left: 4%; bottom: 9%; width: 23%; aspect-ratio: 240 / 220; }
+.pb-curtain { left: 28%; top: 5%; width: 21%; aspect-ratio: 200 / 300; }
+.pb-bed { left: 51%; bottom: 8%; width: 26%; aspect-ratio: 240 / 200; }
+.pb-plant { right: 3%; bottom: 6%; width: 18%; aspect-ratio: 200 / 300; }
+@media (orientation: portrait) {
+  .pb-curtain { left: 6%; top: 4%; width: 38%; }
+  .pb-plant { left: auto; right: 8%; top: 7%; bottom: auto; width: 33%; }
+  .pb-box { left: 4%; top: auto; bottom: 6%; width: 44%; }
+  .pb-bed { left: auto; right: 3%; bottom: 7%; width: 47%; }
+  /* up on the wall, the plant stands on a little shelf */
+  .pb-plant::after {
+    content: "";
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    bottom: -3%;
+    height: 6%;
+    border: 4px solid var(--ink);
+    border-radius: 8px;
+    background: #E8B575;
+    box-shadow: 0 6px 0 rgba(43, 35, 64, .12);
+  }
+}
+.pb-layer { position: absolute; inset: 0; pointer-events: none; }
+.pb-layer > svg { width: 100%; height: 100%; overflow: visible; }
+.pb-layer svg g { transform-box: view-box; }
+.pb-win { position: absolute; overflow: hidden; pointer-events: none; }
+.pb-cat { position: absolute; inset: 0; transform: translateY(102%); transition: transform .45s var(--spring); }
+.pb-cat > svg { width: 100%; height: 100%; overflow: visible; }
+.pb-place.open .pb-cat { transform: translateY(var(--open)); }
+.pb-cat .ks-halo, .pb-cat .ks-open { display: none; }
+.pb-cat.meow .ks-open { display: inline; }
+.pb-cat.meow .ks-shut { display: none; }
+.pb-cat.pb-hop > svg { animation: ks-hop .5s var(--spring); }
+.pb-place.pb-jiggle { animation: bounce .3s ease; }
+
+.pb-flapL, .pb-flapR, .pb-panelL, .pb-panelR, .pb-duvet, .pb-leavesL, .pb-leavesR { transition: transform .4s var(--spring); }
+.pb-flapL { transform-origin: 40px 104px; }
+.pb-flapR { transform-origin: 204px 104px; }
+.open .pb-flapL { transform: rotate(-150deg); }
+.open .pb-flapR { transform: rotate(150deg); }
+.pb-panelL { transform-origin: 14px 30px; }
+.pb-panelR { transform-origin: 186px 30px; }
+.open .pb-panelL, .open .pb-panelR { transform: scaleX(.32); }
+.pb-duvet { transform-origin: 166px 158px; }
+.open .pb-duvet { transform: rotate(16deg) translateY(10px); }
+.pb-leavesL { transform-origin: 100px 210px; }
+.pb-leavesR { transform-origin: 100px 210px; }
+.open .pb-leavesL { transform: rotate(-26deg); }
+.open .pb-leavesR { transform: rotate(26deg); }
+
+.pb-tail {
+  position: absolute;
+  width: 20%;
+  aspect-ratio: 60 / 90;
+  pointer-events: none;
+  opacity: 0;
+  transform: rotate(var(--r)) scale(.4);
+  transform-origin: 30% 100%;
+  transition: opacity .3s, transform .4s var(--spring);
+}
+.pb-tail > svg { width: 100%; height: 100%; overflow: visible; }
+.pb-tail.show { opacity: 1; transform: rotate(var(--r)) scale(1); animation: pb-swish 1s ease-in-out .4s infinite alternate; }
+@keyframes pb-swish { from { transform: rotate(var(--r)); } to { transform: rotate(calc(var(--r) + 18deg)); } }

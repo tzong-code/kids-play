@@ -317,6 +317,12 @@ export const TILE_ART = {
       cat(32, 36, PINK) + cat(88, 36, BLUE) + cat(32, 90, MINT) + cat(88, 88, GOLD, true) +
       ink(2.5, `<path d="M104 54 V40 L112 38 V50" fill="none"/>`) + `<circle cx="102" cy="55" r="3.5" fill="${INK}"/>`);
   },
+  peekaboo: () => svg('0 0 120 120',
+    ink(3.5, `<path d="M26 26 L24 4 L44 16 Z" fill="${PINK}"/><path d="M78 26 L80 4 L60 16 Z" fill="${PINK}"/><ellipse cx="52" cy="38" rx="30" ry="25" fill="${PINK}"/>`) +
+    eyes(41, 63, 36, 3.6, 4.6) + `<ellipse cx="52" cy="50" rx="5" ry="6" fill="${INK}"/>` +
+    ink(3.5, `<path d="M8 58 L20 44 H100 L112 58 Z" fill="#C98F55"/><rect x="12" y="56" width="96" height="56" rx="8" fill="#E8B575"/>` +
+      `<path d="M8 58 L-2 40 L20 44 Z M112 58 L120 38 L100 44 Z" fill="#E8B575"/>`) +
+    `<path d="M40 86 a12 12 0 0 0 24 0" fill="none" stroke="#C98F55" stroke-width="5"/>` + shine(26, 70, 8, 3, 0)),
   gallery: () => svg('0 0 120 120',
     ink(3, `<path d="M26 32 L60 10 L94 32" fill="none"/><circle cx="60" cy="10" r="4.5" fill="${PINK}"/>`) + ink(3.5,
       `<rect x="14" y="30" width="92" height="78" rx="12" fill="${GOLD}"/>` +

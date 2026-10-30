@@ -10,7 +10,8 @@ import stickers from '../games/stickers/index.js';
 import dollhouse from '../games/dollhouse/index.js';
 import giraffe from '../games/giraffe/index.js';
 import busyBoard from '../games/brain-covey/busy-board/index.js';
+import peekaboo from '../games/brain-covey/peekaboo/index.js';
 import kittySays from '../games/brain-carrie/kitty-says/index.js';
 import gallery from '../games/gallery/index.js';
 
-export const GAMES = [draw, colour, stickers, dollhouse, giraffe, busyBoard, kittySays, gallery];
+export const GAMES = [draw, colour, stickers, dollhouse, giraffe, busyBoard, peekaboo, kittySays, gallery];
