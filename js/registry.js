@@ -12,7 +12,8 @@ import giraffe from '../games/giraffe/index.js';
 import busyBoard from '../games/brain-covey/busy-board/index.js';
 import peekaboo from '../games/brain-covey/peekaboo/index.js';
 import colourMatch from '../games/brain-covey/colours/index.js';
+import shapeSorter from '../games/brain-covey/shapes/index.js';
 import kittySays from '../games/brain-carrie/kitty-says/index.js';
 import gallery from '../games/gallery/index.js';
 
-export const GAMES = [draw, colour, stickers, dollhouse, giraffe, busyBoard, peekaboo, colourMatch, kittySays, gallery];
+export const GAMES = [draw, colour, stickers, dollhouse, giraffe, busyBoard, peekaboo, colourMatch, shapeSorter, kittySays, gallery];

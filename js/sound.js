@@ -146,6 +146,11 @@ export const sound = {
     tone({ type: 'triangle', from: freq * 0.85, to: freq * 1.25, dur: 0.16, vol });
     tone({ type: 'triangle', from: freq * 1.25, to: freq * 0.95, dur: 0.24, vol: vol * 0.9, delay: 0.15 });
   },
+  /** A cat's purr: a low rumble pulsing about eight times a second. */
+  purr(dur = 1.6) {
+    for (let i = 0; i < Math.round(dur / 0.12); i++) tone({ type: 'sawtooth', from: 46 + (i % 2) * 6, dur: 0.1, vol: 0.08, delay: i * 0.12 });
+    noise({ dur, vol: 0.05, freq: 160, type: 'lowpass' });
+  },
   /** The soft "not quite" sound: never a buzzer. */
   hmm() { tone({ from: 330, to: 300, dur: 0.18, vol: 0.22 }); tone({ from: 300, to: 340, dur: 0.22, vol: 0.2, delay: 0.2 }); },
   /** A held note whose pitch follows a slider: returns { set(freq), stop() }. */

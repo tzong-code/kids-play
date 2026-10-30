@@ -10,7 +10,7 @@ import { avatarSvg, catFull, mermaidFull, icon, TILE_ART, SCENES, cloudSvg, spar
 import * as playtime from './playtime.js';
 import { hardGate } from './gate.js';
 
-export const VERSION = '1.5.1';
+export const VERSION = '1.6.0';
 
 const FULL_ART = { cat: catFull, 'mermaid-girl': mermaidFull };
 

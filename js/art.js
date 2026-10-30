@@ -328,6 +328,12 @@ export const TILE_ART = {
     ink(3, `<path d="M40 72 L26 60 V84 Z" fill="${RED}"/><ellipse cx="62" cy="72" rx="24" ry="17" fill="${RED}"/>`) +
     `<circle cx="74" cy="67" r="3.4" fill="${INK}"/>` + shine(40, 46, 9, 4) +
     ink(2.5, `<circle cx="88" cy="44" r="5" fill="#fff"/><circle cx="96" cy="32" r="3.5" fill="#fff"/>`)),
+  shapes: () => svg('0 0 120 120', ink(3.5,
+    `<path d="M22 36 L26 10 L44 28 Z" fill="${LAGOON}"/><path d="M98 36 L94 10 L76 28 Z" fill="${LAGOON}"/>` +
+    `<rect x="12" y="26" width="96" height="66" rx="16" fill="${LAGOON}"/>` +
+    `<circle cx="34" cy="70" r="10" fill="${INK}"/><path d="M60 60 L72 80 H48 Z" fill="${INK}"/><rect x="78" y="60" width="20" height="20" rx="4" fill="${INK}"/>`) +
+    eyes(48, 72, 44, 2.6, 3.2) +
+    ink(3.5, `<path d="${star(84, 100, 16, 7)}" fill="${LILAC}"/><circle cx="30" cy="104" r="12" fill="${RED}"/>`) + shine(26, 36, 8, 3, 0)),
   gallery: () => svg('0 0 120 120',
     ink(3, `<path d="M26 32 L60 10 L94 32" fill="none"/><circle cx="60" cy="10" r="4.5" fill="${PINK}"/>`) + ink(3.5,
       `<rect x="14" y="30" width="92" height="78" rx="12" fill="${GOLD}"/>` +

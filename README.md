@@ -54,7 +54,7 @@ To install it on the iPad:
 | `games/stickers/` | Sticker Scenes (GAME-01): Carrie's castle, Covey's reef |
 | `games/dollhouse/` | Kitty Dollhouse (GAME-02): the house front and 8 rooms |
 | `games/giraffe/` | Gigi the Giraffe (GAME-03): `giraffe.js` (Gigi and her savanna, name constant), `idle.js` (breathing, blinks, sleep), `scenes.js` (the six cancellable action scenes), `props.js` (scene art and the jungle) |
-| `games/brain-covey/` | Covey's toddler toys (GAME-05): `shared.js` (drag-to-target with snap and bounce-back, celebrate-then-reset), `busy-board/` (nine fiddle toys), `peekaboo/` (find the hiding cats), `colours/` (Colour Match: fish into bowls) |
+| `games/brain-covey/` | Covey's toddler toys (GAME-05): `shared.js` (drag-to-target with snap and bounce-back, celebrate-then-reset), `busy-board/` (nine fiddle toys), `peekaboo/` (find the hiding cats), `colours/` (Colour Match: fish into bowls), `shapes/` (Shape Sorter: blocks into the cat box) |
 | `games/brain-carrie/` | Carrie's brain games (GAME-04): `shared.js` (round manager: silent level up/down, 90-second wrap-up, saved progress), `kitty-says/` (copy the sequence) |
 | `assets/pages/pages.js` | 60 colouring pages as inline SVG (20 toddler, 40 age-5) |
 | `assets/art/stickers*.js` | 120 cartoon stickers: stamps, scene stickers, dollhouse items and the five cat friends (Sprinkle, Button, Captain Whisker, Pudding, Mochi) |
