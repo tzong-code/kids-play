@@ -47,11 +47,15 @@ To install it on the iPad:
 | `js/stickers.js` | Shared sticker-scene engine: tray, drag in, tap to wiggle, bin, saves per child |
 | `js/playtime.js` | Play blocks, the sleepy-cat countdown, lock state, today's log |
 | `js/gate.js` | Maths keypad and the hard three-question unlock |
+| `js/voice.js` | Spoken prompts for the brain games: a recorded clip from `assets/voice/` when one is listed, otherwise the built-in voice |
+| `js/fx.js` | Sparkles and confetti shared by the games |
 | `games/draw/` | Free draw (`index.js`), colouring pages (`colour.js`), the shared editor (`editor.js`) |
 | `games/gallery/` | Saved drawings |
 | `games/stickers/` | Sticker Scenes (GAME-01): Carrie's castle, Covey's reef |
 | `games/dollhouse/` | Kitty Dollhouse (GAME-02): the house front and 8 rooms |
 | `games/giraffe/` | Gigi the Giraffe (GAME-03): `giraffe.js` (Gigi and her savanna, name constant), `idle.js` (breathing, blinks, sleep), `scenes.js` (the six cancellable action scenes), `props.js` (scene art and the jungle) |
+| `games/brain-covey/` | Covey's toddler toys (GAME-05): `shared.js` (drag-to-target with snap and bounce-back, celebrate-then-reset), `busy-board/` (nine fiddle toys) |
+| `games/brain-carrie/` | Carrie's brain games (GAME-04): `shared.js` (round manager: silent level up/down, 90-second wrap-up, saved progress), `kitty-says/` (copy the sequence) |
 | `assets/pages/pages.js` | 60 colouring pages as inline SVG (20 toddler, 40 age-5) |
 | `assets/art/stickers*.js` | 120 cartoon stickers: stamps, scene stickers, dollhouse items and the five cat friends (Sprinkle, Button, Captain Whisker, Pudding, Mochi) |
 | `assets/art/backdrops.js` | Sticker-scene worlds, the 8 dollhouse rooms and the house front |
@@ -68,6 +72,7 @@ The "Chunky Toy" style (thick ink outlines, solid base shadows, glossy highlight
    - `app` gives you `home()`, `open(id, params)`, `sound`, `speak(text)`, `storage`, `exitButton()` (the hold-to-leave mascot) and `label(text)` (empty for the toddler).
 2. Import it in `js/registry.js` and add it to `GAMES`.
 3. Add its files to `FILES` in `sw.js` and bump `CACHE`.
+4. Optional: export `badge(profile, storage)` returning an element (or null) to show on the home tile, as Kitty Says does with its stars.
 
 ## Play time
 
@@ -81,7 +86,7 @@ To unlock it:
 The block runs on the real clock, so closing or restarting the app doesn't reset it. In Settings you can set:
 - the block length (10, 15, 20 or 30 minutes)
 - the number of blocks per day
-- today's log for each child (blocks started, minutes played)
+- today's log for each child (blocks started, minutes played, and minutes in each game)
 
 Settings can't unlock a locked child; only the lock-screen questions can.
 

@@ -1,7 +1,7 @@
 // Service worker: caches every app file on first load so the app opens with no network.
 // Bump CACHE on every release; the next open on Wi-Fi fetches the new files.
 
-const CACHE = 'kids-play-v4';
+const CACHE = 'kids-play-v5';
 
 const FILES = [
   './',
@@ -19,6 +19,8 @@ const FILES = [
   'js/stickers.js',
   'js/storage.js',
   'js/ui.js',
+  'js/fx.js',
+  'js/voice.js',
   'games/draw/index.js',
   'games/draw/colour.js',
   'games/draw/editor.js',
@@ -32,6 +34,12 @@ const FILES = [
   'games/giraffe/idle.js',
   'games/giraffe/scenes.js',
   'games/giraffe/props.js',
+  'games/brain-covey/shared.js',
+  'games/brain-covey/busy-board/index.js',
+  'games/brain-covey/busy-board/board.js',
+  'games/brain-carrie/shared.js',
+  'games/brain-carrie/kitty-says/index.js',
+  'games/brain-carrie/kitty-says/art.js',
   'assets/pages/pages.js',
   'assets/art/stickers.js',
   'assets/art/stickers-cats.js',

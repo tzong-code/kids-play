@@ -135,6 +135,38 @@ export const sound = {
   boing() { tone({ from: 300, to: 700, dur: 0.18, vol: 0.3 }); tone({ from: 700, to: 450, dur: 0.18, vol: 0.2, delay: 0.16 }); },
   squeak() { tone({ from: 1300, to: 1700, dur: 0.07, vol: 0.12 }); },
   wheee() { tone({ from: 500, to: 1500, dur: 0.8, vol: 0.25 }); },
+  // Busy Board and the brain games (GAME-04 / GAME-05).
+  click() { tone({ type: 'square', from: 1800, to: 1200, dur: 0.03, vol: 0.18 }); noise({ dur: 0.03, vol: 0.2, freq: 3000 }); },
+  tick() { tone({ type: 'square', from: 2400, dur: 0.02, vol: 0.08 }); },
+  zip() { noise({ dur: 0.09, vol: 0.18, freq: 4200 }); },
+  dingdong() { tone({ from: 784, dur: 0.6, vol: 0.3 }); tone({ from: 622, dur: 0.9, vol: 0.3, delay: 0.42 }); },
+  clunk() { tone({ type: 'square', from: 140, to: 70, dur: 0.12, vol: 0.25 }); noise({ dur: 0.08, vol: 0.3, freq: 600, type: 'lowpass', delay: 0.02 }); },
+  /** A cat's meow around `freq` Hz: rises, then falls a little. */
+  meow(freq = 660, vol = 0.32) {
+    tone({ type: 'triangle', from: freq * 0.85, to: freq * 1.25, dur: 0.16, vol });
+    tone({ type: 'triangle', from: freq * 1.25, to: freq * 0.95, dur: 0.24, vol: vol * 0.9, delay: 0.15 });
+  },
+  /** The soft "not quite" sound: never a buzzer. */
+  hmm() { tone({ from: 330, to: 300, dur: 0.18, vol: 0.22 }); tone({ from: 300, to: 340, dur: 0.22, vol: 0.2, delay: 0.2 }); },
+  /** A held note whose pitch follows a slider: returns { set(freq), stop() }. */
+  glide(freq = 440) {
+    if (!ctx) return { set() {}, stop() {} };
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'triangle';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 0.05);
+    o.connect(g).connect(master);
+    o.start();
+    return {
+      set(f) { o.frequency.setTargetAtTime(f, ctx.currentTime, 0.03); },
+      stop() {
+        g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.05);
+        o.stop(ctx.currentTime + 0.3);
+      },
+    };
+  },
   /** Soft falling "good night" notes for the lock screen. */
   lullaby() {
     [784, 659, 523, 392].forEach((f, i) => tone({ from: f, dur: 0.7, vol: 0.22, delay: i * 0.38 }));

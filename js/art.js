@@ -296,6 +296,27 @@ export const TILE_ART = {
     `<circle cx="84" cy="50" r="2" fill="${INK}" stroke="none"/><circle cx="92" cy="52" r="2" fill="${INK}" stroke="none"/>` +
     `<path d="M76 61 Q82 66 88 60" fill="none" stroke-width="2.6"/>`) +
     eyes(55, 70, 42, 4.6, 5.6) + `<ellipse cx="46" cy="54" rx="5" ry="3" fill="#FFD9E8"/>` + shine(52, 28, 6, 2.4)),
+  busy: () => svg('0 0 120 120', ink(3.5,
+    `<rect x="10" y="14" width="100" height="94" rx="18" fill="#F7D9A6"/>` +
+    `<circle cx="38" cy="34" r="11" fill="${GOLD}"/><rect x="31" y="50" width="14" height="26" rx="7" fill="#fff"/><rect x="31" y="50" width="14" height="13" rx="6" fill="${CORAL}"/>` +
+    [0, 1, 2, 3, 4, 5].map(i => {
+      const a0 = (i / 6) * Math.PI * 2, a1 = ((i + 1) / 6) * Math.PI * 2;
+      const p = a => `${(80 + Math.cos(a) * 20).toFixed(1)} ${(42 + Math.sin(a) * 20).toFixed(1)}`;
+      return `<path d="M80 42 L${p(a0)} A20 20 0 0 1 ${p(a1)} Z" fill="${[RED, GOLD, MINT, LAGOON, LILAC, PINK][i]}"/>`;
+    }).join('') +
+    `<rect x="24" y="86" width="72" height="12" rx="6" fill="${LAGOON}"/><circle cx="70" cy="92" r="10" fill="#fff"/>`) +
+    `<circle cx="38" cy="34" r="17" fill="${GOLD}" opacity=".3"/>` + shine(26, 24, 7, 2.5, 0)),
+  kittySays: () => {
+    const cat = (cx, cy, c, open) => ink(3,
+      `<path d="M${cx - 21} ${cy - 2} L${cx - 18} ${cy - 25} L${cx - 5} ${cy - 16} Z" fill="${c}"/><path d="M${cx + 21} ${cy - 2} L${cx + 18} ${cy - 25} L${cx + 5} ${cy - 16} Z" fill="${c}"/>` +
+      `<ellipse cx="${cx}" cy="${cy}" rx="23" ry="19" fill="${c}"/>` +
+      (open ? `<ellipse cx="${cx}" cy="${cy + 8}" rx="4" ry="5" fill="${INK}"/>` : `<path d="M${cx - 5} ${cy + 6} Q${cx} ${cy + 10} ${cx + 5} ${cy + 6}" fill="none" stroke-width="2.2"/>`)) +
+      eyes(cx - 8, cx + 8, cy - 2, 2.2, 2.8);
+    return svg('0 0 120 120',
+      `<circle cx="88" cy="88" r="28" fill="${GOLD}" opacity=".35"/>` +
+      cat(32, 36, PINK) + cat(88, 36, BLUE) + cat(32, 90, MINT) + cat(88, 88, GOLD, true) +
+      ink(2.5, `<path d="M104 54 V40 L112 38 V50" fill="none"/>`) + `<circle cx="102" cy="55" r="3.5" fill="${INK}"/>`);
+  },
   gallery: () => svg('0 0 120 120',
     ink(3, `<path d="M26 32 L60 10 L94 32" fill="none"/><circle cx="60" cy="10" r="4.5" fill="${PINK}"/>`) + ink(3.5,
       `<rect x="14" y="30" width="92" height="78" rx="12" fill="${GOLD}"/>` +

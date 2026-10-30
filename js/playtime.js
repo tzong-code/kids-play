@@ -27,7 +27,7 @@ export const setCap = (id, n) => storage.setSetting(`playCap:${id}`, n);
 
 async function load(id) {
   const st = (await storage.getSetting(`play:${id}`)) || {};
-  if (st.day !== today()) Object.assign(st, { day: today(), blocksToday: 0, msToday: 0 });
+  if (st.day !== today()) Object.assign(st, { day: today(), blocksToday: 0, msToday: 0, games: {} });
   return st;
 }
 const save = (id, st) => storage.setSetting(`play:${id}`, st);
@@ -43,7 +43,17 @@ export async function status(id) {
     minutesToday: Math.round((st.msToday || 0) / 60000),
     minutesLeft: st.locked || !st.blockStartedAt ? 0 : Math.max(0, Math.ceil(remaining(st) / 60000)),
     capReached: await capReached(id, st),
+    /** Minutes in each game today, by game id. */
+    games: Object.fromEntries(Object.entries(st.games || {}).map(([g, ms]) => [g, Math.round(ms / 60000)])),
   };
+}
+
+/** Add time spent in one game to today's log (shown per game in parent settings). */
+export async function logGame(id, game, ms) {
+  if (ms < 1000) return;
+  const st = active?.profile.id === id ? active.state : await load(id);
+  st.games = { ...(st.games || {}), [game]: ((st.games || {})[game] || 0) + ms };
+  await save(id, st);
 }
 
 async function capReached(id, st) {
@@ -104,7 +114,7 @@ function tick() {
   const now = Date.now();
   if (document.visibilityState === 'visible') st.msToday = (st.msToday || 0) + Math.min(now - active.lastTick, 5000);
   active.lastTick = now;
-  if (st.day !== today()) Object.assign(st, { day: today(), blocksToday: 1, msToday: 0 });
+  if (st.day !== today()) Object.assign(st, { day: today(), blocksToday: 1, msToday: 0, games: {} });
 
   const left = remaining(st);
   if (left <= 0) {

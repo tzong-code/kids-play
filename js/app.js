@@ -10,7 +10,7 @@ import { avatarSvg, catFull, mermaidFull, icon, TILE_ART, SCENES, cloudSvg, spar
 import * as playtime from './playtime.js';
 import { hardGate } from './gate.js';
 
-export const VERSION = '1.2.0';
+export const VERSION = '1.3.0';
 
 const FULL_ART = { cat: catFull, 'mermaid-girl': mermaidFull };
 
@@ -160,6 +160,7 @@ function openHome(profile) {
           setTimeout(() => openGame(g.id), 180);
         },
       }, tileArt(g.icon), profile.showText ? el('span.tile-label', {}, g.name) : null);
+      g.badge?.(profile, storage).then(b => b && tile.append(b)).catch(() => {});
       return tile;
     });
     r.append(el('div.home', {},
@@ -199,14 +200,26 @@ function openGame(id, params = {}) {
   const game = GAMES.find(g => g.id === id);
   if (!game || !current) return openHome(current);
   const profile = current;
-  return show(r => {
+  return show(async r => {
     const box = el('div.game', { dataset: { game: id } });
     r.append(box);
-    return game.mount(box, profile, appContext(profile), params);
+    const startedAt = Date.now();
+    const done = await game.mount(box, profile, appContext(profile), params);
+    return async () => {
+      playtime.logGame(profile.id, id, Date.now() - startedAt);
+      if (done) await done();
+    };
   });
 }
 
 // ---------- parent gate and settings ----------
+
+/** "Kitty Says 6 min · Gigi 3 min": today's minutes per game, most played first. */
+function gameLog(games) {
+  const rows = Object.entries(games || {}).filter(([, m]) => m > 0).sort((a, b) => b[1] - a[1])
+    .map(([id, m]) => `${GAMES.find(g => g.id === id)?.name || id} ${m} min`);
+  return rows.length ? el('p.play-log', {}, `By game: ${rows.join(' · ')}`) : null;
+}
 
 function openGate() {
   const a = 3 + Math.floor(Math.random() * 7);
@@ -277,7 +290,8 @@ async function openSettings() {
         chips(playtime.LIMIT_CHOICES, limit, v => `${v} min`, v => playtime.setLimit(id, v)),
         el('p.muted', {}, 'Blocks per day'),
         chips(playtime.CAP_CHOICES, cap, v => (v ? String(v) : 'No limit'), v => playtime.setCap(id, v)),
-        el('p.play-log', {}, `Today: ${st.blocksToday} block${st.blocksToday === 1 ? '' : 's'} started, ${st.minutesToday} min played. ${playNow}.`));
+        el('p.play-log', {}, `Today: ${st.blocksToday} block${st.blocksToday === 1 ? '' : 's'} started, ${st.minutesToday} min played. ${playNow}.`),
+        gameLog(st.games));
       sections.push(el(`section.settings-card.theme-${p.theme}`, {},
         el('h2', {}, `${p.name} · age ${p.age}`),
         el('p.muted', {}, 'Mascot'),
