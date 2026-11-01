@@ -317,6 +317,16 @@ export const TILE_ART = {
       cat(32, 36, PINK) + cat(88, 36, BLUE) + cat(32, 90, MINT) + cat(88, 88, GOLD, true) +
       ink(2.5, `<path d="M104 54 V40 L112 38 V50" fill="none"/>`) + `<circle cx="102" cy="55" r="3.5" fill="${INK}"/>`);
   },
+  opposite: () => svg('0 0 120 120',
+    `<rect x="0" y="78" width="120" height="42" fill="#4FDDE6"/>` + ink(3, `<path d="M0 78 H120" fill="none"/>`) +
+    `<g transform="translate(14 26) scale(.6)">${catHead()}</g>` +
+    ink(3, `<path d="M32 44 L44 6 L56 40 Z" fill="${LILAC}"/><circle cx="44" cy="6" r="5" fill="${GOLD}"/>`) +
+    ink(3, `<path d="M74 98 L62 88 V108 Z" fill="#D94848"/><ellipse cx="88" cy="98" rx="18" ry="12" fill="${RED}"/>`) +
+    `<circle cx="96" cy="95" r="2.6" fill="${INK}"/>` +
+    ink(3, `<path d="M28 102 L18 94 V110 Z" fill="${BLUE_D}"/><ellipse cx="40" cy="102" rx="14" ry="9" fill="${BLUE}"/>`) +
+    `<circle cx="46" cy="100" r="2.2" fill="${INK}"/>` +
+    ink(3, `<path d="M84 52 L104 22" fill="none" stroke-width="6"/>`) + `<path d="M84 52 L104 22" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>` +
+    ink(2.5, `<circle cx="105" cy="20" r="4.5" fill="${GOLD}"/>`)),
   peekaboo: () => svg('0 0 120 120',
     ink(3.5, `<path d="M26 26 L24 4 L44 16 Z" fill="${PINK}"/><path d="M78 26 L80 4 L60 16 Z" fill="${PINK}"/><ellipse cx="52" cy="38" rx="30" ry="25" fill="${PINK}"/>`) +
     eyes(41, 63, 36, 3.6, 4.6) + `<ellipse cx="52" cy="50" rx="5" ry="6" fill="${INK}"/>` +

@@ -1891,3 +1891,70 @@ body.timer-on .editor .bar.palette { margin-top: 70px; }
 .bs-hat-on { position: absolute; left: 24%; width: 52%; top: -9%; aspect-ratio: 120 / 100; opacity: 0; transform: translateY(-30px); transition: opacity .2s, transform .4s var(--spring); }
 .bs-hat-on > svg { width: 100%; height: 100%; display: block; }
 .bs-target.home .bs-hat-on { opacity: 1; transform: none; }
+
+/* ---------- Opposite Day (GAME-04b) ---------- */
+
+.od-game { grid-template-rows: auto 1fr; }
+.od-stage { position: absolute; inset: 0; touch-action: none; background: #FFE6F2; --sky: clamp(170px, 31%, 270px); }
+.od-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+/* the bank: conductor in the middle, the bucket on the right (Superdesign draft) */
+.od-sky { position: absolute; left: 0; right: 0; top: 0; height: var(--sky); }
+.od-sky > svg { position: absolute; left: 5%; top: 16%; width: clamp(80px, 12%, 140px); animation: od-drift 9s ease-in-out infinite alternate; }
+@keyframes od-drift { to { transform: translateX(40px); } }
+.od-conductor { position: absolute; left: 50%; bottom: -2px; height: 96%; aspect-ratio: 350 / 280; transform: translateX(-56%); z-index: 2; touch-action: none; }
+.od-conductor > svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.od-conductor svg g { transform-box: fill-box; }
+.od-baton { transform-origin: 4% 96%; animation: od-baton 1.4s ease-in-out infinite alternate; }
+@keyframes od-baton { from { transform: rotate(-10deg); } to { transform: rotate(14deg); } }
+.od-head { transform-origin: 50% 90%; }
+.od-hat { opacity: 0; transform: translateY(-40px); transition: opacity .2s, transform .5s var(--spring); }
+.od-conductor.hat .od-hat { opacity: 1; transform: none; }
+.od-sign { transform-origin: 50% 50%; }
+.od-sign.flip { animation: od-flip .42s ease-in-out; }
+@keyframes od-flip { 50% { transform: scaleX(0); } }
+.od-conductor.od-bob > svg, .od-bucket.od-bob { animation: bounce .35s ease; }
+.od-conductor.od-giggle .od-head { animation: ks-headshake .6s ease; }
+.od-conductor.od-giggle .od-body { animation: od-giggle .5s ease; transform-origin: 50% 100%; }
+@keyframes od-giggle { 25%, 75% { transform: scale(1.03, .97); } 50% { transform: scale(.98, 1.03); } }
+.od-conductor.od-dance > svg { animation: ks-dance .4s ease-in-out infinite alternate; }
+.od-conductor.od-dance .od-baton { animation-duration: .4s; }
+
+.od-bucket-box { position: absolute; right: 3%; bottom: 5%; width: calc(var(--sky) * .45); display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 2; }
+.od-bucket { width: 100%; aspect-ratio: 160 / 200; }
+.od-bucket > svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.od-pips { display: grid; grid-template-columns: repeat(5, 14px); gap: 4px; padding: 5px 8px; background: #fff; border-radius: 12px; box-shadow: 0 0 0 3px var(--ink); }
+.od-pip { width: 14px; height: 14px; border-radius: 50%; background: #F1E8F7; box-shadow: inset 0 0 0 2px #D9CFEA; }
+.od-pip[style] { box-shadow: inset 0 0 0 2.5px var(--ink); }
+
+/* the pond: fish swim across in lanes */
+.od-water { position: absolute; left: 0; right: 0; bottom: 0; top: var(--sky); background: #4FDDE6; border-top: 4px solid var(--ink); overflow: hidden; }
+.od-water > svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.od-fishes { position: absolute; inset: 0; }
+.od-fish {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--fish);
+  aspect-ratio: 160 / 110;
+  padding: 0;
+  border: 0;
+  background: none;
+  will-change: transform;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity .5s;
+}
+.od-fish-in { width: 100%; height: 100%; animation: od-swim .9s ease-in-out infinite alternate; }
+.od-fish-in svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.od-fish.left svg, .od-flyer.left svg { transform: scaleX(-1); }
+@keyframes od-swim { from { transform: translateY(-4px) rotate(-3deg); } to { transform: translateY(4px) rotate(3deg); } }
+.od-fish-in.od-wobble { animation: bb-shake .45s ease; }
+.od-fish.od-away { opacity: 0; pointer-events: none; }
+.od-flyer { position: absolute; aspect-ratio: 160 / 110; transition: transform .55s cubic-bezier(.3, -.3, .6, 1), opacity .55s ease-in; }
+/* narrow screens: conductor to the left so the bucket fits beside her */
+@media (max-width: 600px) {
+  .od-conductor { left: 0; transform: none; height: 90%; }
+  .od-sky > svg { display: none; }
+  .od-pips { grid-template-columns: repeat(5, 10px); gap: 3px; padding: 4px 6px; }
+  .od-pip { width: 10px; height: 10px; }
+}
