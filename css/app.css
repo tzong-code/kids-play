@@ -2016,3 +2016,51 @@ body.timer-on .editor .bar.palette { margin-top: 70px; }
 .pp-pips { position: absolute; top: calc(var(--bunting) + 8px); right: 3%; display: flex; gap: 6px; padding: 7px 10px; background: #fff; border-radius: 999px; box-shadow: 0 0 0 3px var(--ink); z-index: 4; }
 .pp-pip { width: 18px; height: 18px; border-radius: 50%; background: #F1E8F7; box-shadow: inset 0 0 0 2px #D9CFEA; transition: background .3s; }
 .pp-pip.on { background: var(--accent, #FF5FA8); box-shadow: inset 0 0 0 2.5px var(--ink); }
+
+/* ---------- Sticker Memory (GAME-04d) ---------- */
+
+/* the table: a lilac cloth with a scalloped hem (Superdesign draft) */
+.sm-table { position: absolute; inset: 0; display: grid; place-items: center; background: #B78CFF; overflow: hidden; }
+.sm-table::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: radial-gradient(circle at 50% 100%, #9B6BF0 0 38px, transparent 39px) 0 0 / 80px 44px repeat-x; pointer-events: none; }
+.sm-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+.sm-grid { position: relative; z-index: 1; display: grid; gap: var(--gap); }
+.sm-card { position: relative; width: var(--card); height: var(--card); padding: 0; border: 0; background: none; perspective: 900px; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.sm-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .5s var(--spring); }
+.sm-card.up .sm-inner, .sm-card.matched .sm-inner { transform: rotateY(180deg); }
+.sm-back, .sm-front { position: absolute; inset: 0; border-radius: calc(var(--card) * .15); backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 0 0 4px var(--ink), 0 7px 0 4px var(--ink); overflow: hidden; }
+.sm-back { background: #FF5FA8; }
+.sm-back > svg { width: 100%; height: 100%; display: block; }
+.sm-front { background: #fff; transform: rotateY(180deg); display: grid; place-items: center; }
+.sm-front img { width: 80%; height: 80%; object-fit: contain; pointer-events: none; }
+.sm-front.drawing img { width: 90%; height: 90%; object-fit: cover; border-radius: calc(var(--card) * .1); }
+.sm-card.matched .sm-front { box-shadow: 0 0 0 4px var(--ink), 0 0 0 9px #FFC93C, 0 0 22px 10px rgba(255, 201, 60, .55); }
+.sm-card.sm-hint .sm-back { animation: sm-hint .9s ease 2; }
+@keyframes sm-hint { 50% { box-shadow: 0 0 0 4px var(--ink), 0 0 0 9px #fff, 0 0 26px 12px rgba(255, 255, 255, .8); } }
+.sm-card.sm-deal { animation: sm-deal .45s var(--spring) both; }
+@keyframes sm-deal { from { transform: scale(.4) rotate(-12deg); opacity: 0; } }
+.sm-dance .sm-card { animation: ks-dance .4s ease-in-out infinite alternate; }
+.sm-dance .sm-card:nth-child(2n) { animation-delay: -.2s; }
+
+/* the tray: players, their piles of pairs, the turn cat and the 1-or-2 button */
+.sm-tray { position: relative; justify-content: flex-start; gap: 16px; padding: 0 22px; height: 96px; background: #fff; box-shadow: 0 8px 0 #D9CFEA, 0 8px 0 var(--line) var(--ink); overflow: visible; }
+.sm-pad { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.sm-pad.p1 { margin-left: auto; flex-direction: row-reverse; }
+.sm-face { flex: none; width: 68px; height: 68px; padding: 6px; border: 0; border-radius: 50%; background: #FFE1EF; box-shadow: 0 0 0 4px var(--ink); touch-action: none; }
+.sm-pad.p1 .sm-face { background: #CFF3F8; }
+.sm-face > svg { width: 100%; height: 100%; display: block; }
+.sm-face.sm-cheer { animation: bounce .4s ease 3; }
+.sm-won { display: flex; align-items: center; min-width: 0; }
+.sm-mini { flex: none; width: 38px; height: 38px; display: grid; place-items: center; background: #fff; border-radius: 9px; box-shadow: 0 0 0 3px var(--ink); animation: sm-deal .4s var(--spring) both; }
+.sm-mini + .sm-mini { margin-left: -16px; }
+.sm-mini img { width: 80%; height: 80%; object-fit: contain; }
+.sm-toggle { flex: none; width: 84px; height: 62px; padding: 4px; border: 0; border-radius: 20px; background: #F1E8F7; box-shadow: 0 0 0 4px var(--ink), 0 6px 0 4px var(--ink); touch-action: none; }
+.sm-tray:not(.two) .sm-toggle { margin-left: auto; }
+.sm-toggle > svg { width: 100%; height: 100%; display: block; }
+.sm-tray:not(.two) .p1, .sm-tray:not(.two) .sm-marker { display: none; }
+.sm-marker { position: absolute; left: 0; top: -50px; width: 62px; aspect-ratio: 200 / 210; transition: transform .8s ease-in-out; pointer-events: none; z-index: 2; }
+.sm-marker > svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.sm-marker.left > svg { transform: scaleX(-1); }
+.sm-marker svg g { transform-box: fill-box; }
+.sm-marker.walking .pp-legs-a { animation: pp-step .2s ease-in-out infinite alternate; }
+.sm-marker.walking .pp-legs-b { animation: pp-step .2s ease-in-out infinite alternate-reverse; }
+@media (max-width: 600px) { .sm-tray { height: 80px; padding: 0 12px; gap: 10px; } .sm-face { width: 54px; height: 54px; } .sm-mini { width: 30px; height: 30px; } .sm-mini + .sm-mini { margin-left: -20px; } .sm-toggle { width: 66px; height: 50px; } }

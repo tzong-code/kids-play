@@ -337,6 +337,15 @@ export const TILE_ART = {
       cat(28, PINK) + cat(62, BLUE) +
       ink(3, `<circle cx="96" cy="60" r="16" fill="#fff" stroke-dasharray="5 4"/>`) + `<text x="96" y="67" text-anchor="middle" font-family="Fredoka, system-ui" font-weight="700" font-size="20" fill="${INK}">?</text>`);
   },
+  memory: () => {
+    const back = (x, y, r) => `<g transform="rotate(${r} ${x + 21} ${y + 26})">` + ink(3.5, `<rect x="${x}" y="${y}" width="42" height="52" rx="8" fill="${PINK}"/>`) +
+      ink(2.5, `<path d="M${x + 11} ${y + 34} L${x + 9} ${y + 18} L${x + 16} ${y + 24} L${x + 21} ${y + 14} L${x + 26} ${y + 24} L${x + 33} ${y + 18} L${x + 31} ${y + 34} Z" fill="${GOLD}"/>`) + `</g>`;
+    return svg('0 0 120 120',
+      back(8, 34, -10) + back(70, 34, 10) +
+      ink(3.5, `<rect x="38" y="22" width="44" height="56" rx="9" fill="#fff"/>`) +
+      ink(3, `<path d="M60 64 C46 54 44 46 48 40 C52 35 58 37 60 42 C62 37 68 35 72 40 C76 46 74 54 60 64 Z" fill="${PINK}"/>`) +
+      shine(52, 44, 3, 5, 20) + `<circle cx="34" cy="20" r="3" fill="${GOLD}"/><circle cx="88" cy="18" r="2.5" fill="${GOLD}"/>`);
+  },
   peekaboo: () => svg('0 0 120 120',
     ink(3.5, `<path d="M26 26 L24 4 L44 16 Z" fill="${PINK}"/><path d="M78 26 L80 4 L60 16 Z" fill="${PINK}"/><ellipse cx="52" cy="38" rx="30" ry="25" fill="${PINK}"/>`) +
     eyes(41, 63, 36, 3.6, 4.6) + `<ellipse cx="52" cy="50" rx="5" ry="6" fill="${INK}"/>` +
