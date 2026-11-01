@@ -1958,3 +1958,61 @@ body.timer-on .editor .bar.palette { margin-top: 70px; }
   .od-pips { grid-template-columns: repeat(5, 10px); gap: 3px; padding: 4px 6px; }
   .od-pip { width: 10px; height: 10px; }
 }
+
+/* ---------- Pattern Parade (GAME-04c) ---------- */
+
+.pp-game { grid-template-rows: auto 1fr; }
+.pp-stage { position: absolute; inset: 0; touch-action: none; overflow: hidden; background: #FFE1EF; }
+.pp-sky { position: absolute; left: 0; right: 0; top: 0; height: 44%; }
+.pp-sky > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pp-bunting { position: absolute; left: 0; right: 0; top: 0; }
+.pp-bunting > svg { width: 100%; display: block; }
+/* the street (Superdesign draft): road, red carpet, grass verge */
+.pp-road, .pp-carpet, .pp-grass { position: absolute; left: 0; right: 0; border-top: 4px solid var(--ink); }
+.pp-road { top: 44%; height: 16%; background: #FDD4A6; }
+.pp-carpet { top: 60%; height: 7%; background: repeating-linear-gradient(90deg, #FF6B6B 0 46px, #F25A5A 46px 92px); }
+.pp-grass { top: 67%; bottom: 0; background: #4ADE9A; }
+.pp-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 6; }
+
+/* the parade: feet on the carpet */
+.pp-line { position: absolute; left: 2%; right: 2%; bottom: 34%; display: flex; align-items: flex-end; justify-content: center; gap: calc(var(--u) * .04); z-index: 2; }
+.pp-cat, .pp-gap { position: relative; flex: none; width: calc(var(--u) * var(--s, 1)); aspect-ratio: 200 / 210; touch-action: none; }
+.pp-cat > svg, .pp-gap > svg, .pp-pick > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pp-cat svg g, .pp-pick svg g { transform-box: fill-box; }
+.pp-legs-a, .pp-legs-b { transform-origin: 50% 10%; }
+.pp-cat .pp-legs-a { animation: pp-step .5s ease-in-out infinite alternate; }
+.pp-cat .pp-legs-b { animation: pp-step .5s ease-in-out infinite alternate-reverse; }
+.pp-marching .pp-cat .pp-legs-a, .pp-marching .pp-cat .pp-legs-b { animation-duration: .22s; }
+.pp-marching .pp-cat > svg { animation: pp-bob .22s ease-in-out infinite alternate; }
+@keyframes pp-step { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+@keyframes pp-bob { to { transform: translateY(-5%); } }
+.pp-cat.pp-hop > svg { animation: pp-hop .4s var(--spring); }
+@keyframes pp-hop { 50% { transform: translateY(-16%); } }
+.pp-cat.pp-join > svg { animation: pp-join .5s var(--spring); }
+@keyframes pp-join { from { transform: scale(.4); opacity: 0; } }
+.pp-dance .pp-cat > svg { animation: ks-dance .4s ease-in-out infinite alternate; }
+.pp-dance .pp-cat:nth-child(2n) > svg { animation-delay: -.2s; }
+/* the gap: a dashed white cat waiting to be filled */
+.pp-gap { filter: drop-shadow(0 0 6px #fff); }
+.pp-gap svg * { fill: rgba(255, 255, 255, .7); stroke: #9B6BF0; stroke-dasharray: 10 7; }
+.pp-gap svg ellipse[opacity] { fill: none; stroke: none; }
+.pp-gap svg path[fill="none"] { stroke-width: 4; }
+.pp-gap.pp-glow { animation: pp-glow .7s ease; }
+@keyframes pp-glow { 40% { transform: scale(1.08); filter: drop-shadow(0 0 22px #FFC93C) drop-shadow(0 0 8px #fff); } }
+.pp-q { position: absolute; left: 62%; top: -8%; width: 40%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: #FFC93C; box-shadow: 0 0 0 3px var(--ink); color: var(--ink); font: 700 calc(var(--u) * .3) / 1 var(--font); display: grid; place-items: center; }
+
+/* the three to choose from, on cushions on the grass */
+.pp-picks { position: absolute; left: 0; right: 0; bottom: 3%; display: flex; justify-content: space-evenly; align-items: flex-end; z-index: 3; transition: opacity .4s; }
+.pp-picks.pp-away { opacity: 0; }
+.pp-seat { position: relative; width: var(--c); display: flex; justify-content: center; align-items: flex-end; padding-bottom: calc(var(--c) * .08); }
+.pp-seat::before { content: ''; position: absolute; left: 4%; right: 4%; bottom: 0; height: calc(var(--c) * .22); border-radius: 50%; background: #FFE1EF; box-shadow: 0 0 0 4px var(--ink), 0 6px 0 4px rgba(43, 35, 64, .25); }
+.pp-seat.pp-used .pp-pick { visibility: hidden; }
+.pp-pick { position: relative; width: calc(var(--c) * var(--s, 1)); aspect-ratio: 200 / 210; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.pp-pick > svg { transition: transform .25s var(--spring); }
+.pp-pick.dragging { z-index: 5; }
+.pp-pick.dragging > svg { transform: scale(1.1) rotate(-6deg); filter: drop-shadow(0 10px 0 rgba(43, 35, 64, .2)); }
+.pp-busy .pp-pick { pointer-events: none; }
+
+.pp-pips { position: absolute; top: calc(var(--bunting) + 8px); right: 3%; display: flex; gap: 6px; padding: 7px 10px; background: #fff; border-radius: 999px; box-shadow: 0 0 0 3px var(--ink); z-index: 4; }
+.pp-pip { width: 18px; height: 18px; border-radius: 50%; background: #F1E8F7; box-shadow: inset 0 0 0 2px #D9CFEA; transition: background .3s; }
+.pp-pip.on { background: var(--accent, #FF5FA8); box-shadow: inset 0 0 0 2.5px var(--ink); }

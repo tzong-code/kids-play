@@ -5,12 +5,21 @@
 
 export { say } from '../../js/voice.js';
 export { sparkles, sparklesAt, confetti } from '../../js/fx.js';
+import { el } from '../../js/ui.js';
+import { starSvg } from './kitty-says/art.js';
 
 const WRAP_MS = 75 * 1000;
 
 /** Best-streak milestones; each one reached is a star on the game's home tile. */
 export const STAR_STEPS = [3, 5, 8, 12, 16];
 export const starsFor = best => STAR_STEPS.filter(n => best >= n).length;
+
+/** A game's home-tile badge: one star per best-streak milestone reached. */
+export const starBadge = game => async (profile, storage) => {
+  const n = starsFor((await loadProgress(storage, game)).best);
+  return el('span.tile-stars', { 'aria-label': `${n} stars` },
+    STAR_STEPS.map((_, i) => el(`span.tile-star${i < n ? '.on' : ''}`, { innerHTML: starSvg() })));
+};
 
 export async function loadProgress(storage, game) {
   return { level: 1, rounds: 0, best: 0, ...((await storage.getSetting(`brain-carrie-${game}`).catch(() => null)) || {}) };

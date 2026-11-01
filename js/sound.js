@@ -152,6 +152,7 @@ export const sound = {
     noise({ dur, vol: 0.05, freq: 160, type: 'lowpass' });
   },
   /** The soft "not quite" sound: never a buzzer. */
+  drum() { tone({ from: 130, to: 60, dur: 0.16, vol: 0.5 }); noise({ dur: 0.06, vol: 0.22, freq: 500, type: 'lowpass' }); },
   whistle() { tone({ from: 1900, to: 2300, dur: 0.1, vol: 0.16 }); tone({ from: 2300, to: 1800, dur: 0.28, vol: 0.16, delay: 0.13 }); },
   hmm() { tone({ from: 330, to: 300, dur: 0.18, vol: 0.22 }); tone({ from: 300, to: 340, dur: 0.22, vol: 0.2, delay: 0.2 }); },
   /** A held note whose pitch follows a slider: returns { set(freq), stop() }. */

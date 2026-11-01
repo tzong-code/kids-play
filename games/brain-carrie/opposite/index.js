@@ -6,9 +6,8 @@
 
 import { el, play } from '../../../js/ui.js';
 import { cloudSvg } from '../../../js/art.js';
-import { say, sparklesAt, confetti, createRounds, loadProgress, starsFor, STAR_STEPS } from '../shared.js';
+import { say, sparklesAt, confetti, createRounds, starBadge } from '../shared.js';
 import { COLOURS, fishSvg } from '../../brain-covey/colours/art.js';
-import { starSvg } from '../kitty-says/art.js';
 import { conductorSvg, signInner, pondSvg, bucketSvg } from './art.js';
 
 const RED = COLOURS[0], BLUE = COLOURS[1];
@@ -20,19 +19,13 @@ const GRACE_MS = 1200;      // after a rule change, a slip is not counted
 // Levels 1-3: tap one colour; 4-6: the colour flips; 7-9: Opposite Day.
 const phaseFor = level => (level <= 3 ? 1 : level <= 6 ? 2 : 3);
 
-async function badge(profile, storage) {
-  const { best } = await loadProgress(storage, 'opposite');
-  const n = starsFor(best);
-  return el('span.tile-stars', { 'aria-label': `${n} stars` },
-    STAR_STEPS.map((_, i) => el(`span.tile-star${i < n ? '.on' : ''}`, { innerHTML: starSvg() })));
-}
 
 export default {
   id: 'opposite',
   name: 'Opposite Day',
   icon: 'opposite',
   ages: [4, 5, 6, 7, 8],
-  badge,
+  badge: starBadge('opposite'),
   async mount(container, profile, app) {
     const { sound, storage } = app;
     const rounds = await createRounds({ storage, game: 'opposite', maxLevel: 9 });

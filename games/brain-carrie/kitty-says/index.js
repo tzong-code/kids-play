@@ -4,26 +4,19 @@
 // within about 90 seconds. Progress and best streak are kept by the shared round manager.
 
 import { el, play } from '../../../js/ui.js';
-import { say, sparklesAt, confetti, createRounds, loadProgress, starsFor, STAR_STEPS } from '../shared.js';
+import { say, sparklesAt, confetti, createRounds, starBadge, starsFor, STAR_STEPS } from '../shared.js';
 import { CATS, sittingCatSvg, stageSvg, pawSvg, starSvg, noteSvg } from './art.js';
 
 const DANCE_AT = [5, 8, 12];
 const STOP = Symbol('stop');
 
-/** Stars for the home tile: one per best-streak milestone reached. */
-async function badge(profile, storage) {
-  const { best } = await loadProgress(storage, 'kitty-says');
-  const n = starsFor(best);
-  return el('span.tile-stars', { 'aria-label': `${n} stars` },
-    STAR_STEPS.map((_, i) => el(`span.tile-star${i < n ? '.on' : ''}`, { innerHTML: starSvg() })));
-}
 
 export default {
   id: 'kitty-says',
   name: 'Kitty Says',
   icon: 'kittySays',
   ages: [4, 5, 6, 7, 8],
-  badge,
+  badge: starBadge('kitty-says'),
   async mount(container, profile, app) {
     const { sound, storage } = app;
     const rounds = await createRounds({ storage, game: 'kitty-says', maxLevel: 8 });
