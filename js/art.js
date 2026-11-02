@@ -346,6 +346,15 @@ export const TILE_ART = {
       ink(3, `<path d="M60 64 C46 54 44 46 48 40 C52 35 58 37 60 42 C62 37 68 35 72 40 C76 46 74 54 60 64 Z" fill="${PINK}"/>`) +
       shine(52, 44, 3, 5, 20) + `<circle cx="34" cy="20" r="3" fill="${GOLD}"/><circle cx="88" cy="18" r="2.5" fill="${GOLD}"/>`);
   },
+  fishing: () => svg('0 0 120 120',
+    `<rect x="0" y="62" width="120" height="58" fill="#7FD8F0"/>` + ink(3, `<path d="M0 62 H120" fill="none"/>`) +
+    ink(3, `<path d="M6 56 Q40 66 74 56 L68 74 Q40 80 12 74 Z" fill="${LILAC}"/>`) +
+    `<g transform="translate(18 14) scale(.38)">${catHead()}</g>` +
+    ink(3, `<path d="M52 50 L100 10" fill="none" stroke-width="6"/>`) + `<path d="M52 50 L100 10" stroke="#E8B575" stroke-width="2.5" stroke-linecap="round"/>` +
+    `<path d="M100 10 Q104 50 92 84" fill="none" stroke="${INK}" stroke-width="2"/>` +
+    ink(3, `<path d="M58 96 L46 86 V106 Z" fill="#E0A21A"/><ellipse cx="78" cy="96" rx="24" ry="16" fill="${GOLD}"/><circle cx="80" cy="96" r="11" fill="#fff"/>`) +
+    `<text x="80" y="101" text-anchor="middle" font-family="Fredoka, system-ui" font-weight="700" font-size="15" fill="${INK}">a</text>` +
+    `<circle cx="96" cy="91" r="2.6" fill="${INK}"/>`),
   peekaboo: () => svg('0 0 120 120',
     ink(3.5, `<path d="M26 26 L24 4 L44 16 Z" fill="${PINK}"/><path d="M78 26 L80 4 L60 16 Z" fill="${PINK}"/><ellipse cx="52" cy="38" rx="30" ry="25" fill="${PINK}"/>`) +
     eyes(41, 63, 36, 3.6, 4.6) + `<ellipse cx="52" cy="50" rx="5" ry="6" fill="${INK}"/>` +

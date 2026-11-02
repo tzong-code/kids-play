@@ -2064,3 +2064,76 @@ body.timer-on .editor .bar.palette { margin-top: 70px; }
 .sm-marker.walking .pp-legs-a { animation: pp-step .2s ease-in-out infinite alternate; }
 .sm-marker.walking .pp-legs-b { animation: pp-step .2s ease-in-out infinite alternate-reverse; }
 @media (max-width: 600px) { .sm-tray { height: 80px; padding: 0 12px; gap: 10px; } .sm-face { width: 54px; height: 54px; } .sm-mini { width: 30px; height: 30px; } .sm-mini + .sm-mini { margin-left: -20px; } .sm-toggle { width: 66px; height: 50px; } }
+
+/* ---------- Word Fishing (GAME-04e) ---------- */
+
+.wf-game { grid-template-rows: auto 1fr; }
+.wf-stage { position: absolute; inset: 0; touch-action: none; background: #FFE6F2; overflow: hidden; --sky: 240px; --boat: 160px; --tile: 72px; --fish: 150px; }
+.wf-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
+.wf-sky { position: absolute; left: 0; right: 0; top: 0; height: var(--sky); }
+.wf-sky > svg { position: absolute; left: 30%; top: 10%; width: clamp(70px, 10%, 130px); animation: od-drift 9s ease-in-out infinite alternate; }
+
+/* the word card: the picture, a slot per letter and the "say it again" button */
+.wf-card { position: absolute; top: 12px; right: 14px; display: flex; align-items: center; gap: calc(var(--tile) * .14); padding: 12px 14px; background: #fff; border-radius: 26px; box-shadow: 0 0 0 4px var(--ink), 0 8px 0 4px var(--ink); z-index: 2; }
+.wf-stage.narrow .wf-card { top: 10px; left: 12px; right: 12px; justify-content: center; padding: 12px 10px; }
+.wf-stage.narrow .wf-card.long .wf-pic { display: none; }
+.wf-stage.narrow .wf-say { width: 44px; padding: 6px; margin-left: 6px; }
+.wf-card.wf-in { animation: wf-in .45s var(--spring); }
+@keyframes wf-in { from { transform: scale(.7); opacity: 0; } }
+.wf-pic { flex: none; width: calc(var(--tile) * 1.15); height: calc(var(--tile) * 1.15); display: grid; place-items: center; margin-right: calc(var(--tile) * .1); background: #FFF4E0; border-radius: 18px; }
+.wf-pic-img, .wf-item img { width: 86%; height: 86%; object-fit: contain; display: block; }
+.wf-emoji { font-size: calc(var(--tile) * .8); line-height: 1; }
+.wf-avatar { width: 92%; height: 92%; }
+.wf-avatar > svg { width: 100%; height: 100%; display: block; }
+.wf-slots { display: flex; gap: calc(var(--tile) * .14); }
+.wf-slot { width: var(--tile); height: var(--tile); display: grid; place-items: center; border-radius: 16px; background: #F7F1FF; box-shadow: inset 0 0 0 3px #B78CFF; outline: 3px dashed #B78CFF; outline-offset: -3px; }
+.wf-slot:has(.wf-tile) { background: none; box-shadow: none; outline: 0; }
+.wf-ghost { font: 700 calc(var(--tile) * .62) / 1 var(--font); color: #D9C7F5; }
+.wf-tile { width: 100%; height: 100%; display: grid; place-items: center; border-radius: 16px; background: #FFC93C; box-shadow: 0 0 0 3.5px var(--ink), 0 5px 0 3.5px #D63E86; font: 700 calc(var(--tile) * .62) / 1 var(--font); color: var(--ink); }
+.wf-slot.wf-land { animation: bounce .4s ease; }
+.wf-tile.wf-fly { position: absolute; transform-origin: 0 0; transition: transform .5s cubic-bezier(.3, -.3, .5, 1); z-index: 5; }
+.wf-say { flex: none; width: max(46px, calc(var(--tile) * .78)); aspect-ratio: 1; margin-left: calc(var(--tile) * .1); padding: 8px; border: 0; border-radius: 50%; background: #FF5FA8; box-shadow: 0 0 0 4px var(--ink), 0 5px 0 4px #B8306F; touch-action: none; }
+.wf-say > svg { width: 100%; height: 100%; display: block; }
+.wf-say:active { transform: translateY(4px); box-shadow: 0 0 0 4px var(--ink), 0 1px 0 4px #B8306F; }
+
+/* the boat sits on the water line, rocking gently; its cargo sits on the rim */
+.wf-boat { position: absolute; left: 0; top: calc(var(--sky) - var(--boat) * .62); height: var(--boat); aspect-ratio: 300 / 220; z-index: 3; animation: wf-rock 2.6s ease-in-out infinite alternate; transform-origin: 50% 80%; }
+.wf-boat.gliding { transition: left .55s ease-in-out; }
+.wf-boat > div { position: absolute; inset: 0; }
+.wf-boat svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.wf-boat-front { pointer-events: none; }
+.wf-cat { cursor: pointer; }
+@keyframes wf-rock { from { transform: rotate(-1.5deg); } to { transform: translateY(3px) rotate(1.5deg); } }
+.wf-boat.wf-bob { animation: bounce .4s ease; }
+.wf-boat.wf-dance { animation: ks-dance .4s ease-in-out infinite alternate; }
+.wf-item { position: absolute; bottom: 24%; width: 22%; aspect-ratio: 1; display: grid; place-items: center; }
+.wf-item .wf-emoji { font-size: calc(var(--boat) * .25); }
+.wf-item.hop { transition: transform .65s cubic-bezier(.3, -.6, .5, 1.3); }
+.wf-boat.wf-dance .wf-item { animation: bounce .5s ease infinite; }
+
+/* the line and hook, drawn from the rod tip */
+.wf-line { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; overflow: visible; }
+.wf-line path { stroke: var(--ink); stroke-width: 2.5; }
+.wf-hook { position: absolute; left: 0; top: 0; width: 22px; pointer-events: none; z-index: 4; }
+.wf-hook > svg { width: 100%; display: block; }
+
+/* the lake: fish carrying letters swim across in lanes */
+.wf-water { position: absolute; left: 0; right: 0; bottom: 0; top: var(--sky); background: linear-gradient(#7FD8F0, #48B8D8); border-top: 4px solid var(--ink); overflow: hidden; }
+.wf-water > svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.wf-fishes { position: absolute; inset: 0; }
+.wf-fish { position: absolute; left: 0; top: 0; width: var(--fish); aspect-ratio: 160 / 110; padding: 0; border: 0; background: none; will-change: transform; touch-action: none; -webkit-tap-highlight-color: transparent; transition: opacity .5s; }
+.wf-fish-in { position: relative; width: 100%; height: 100%; animation: od-swim .9s ease-in-out infinite alternate; }
+.wf-fish-in svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.wf-fish.left svg { transform: scaleX(-1); }
+.wf-letter { position: absolute; left: 53%; top: 50%; width: 44%; aspect-ratio: 1; transform: translate(-50%, -50%); display: grid; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px var(--ink); font: 700 calc(var(--fish) * .28) / 1 var(--font); color: var(--ink); padding-bottom: .06em; }
+.wf-fish.left .wf-letter { left: 47%; }
+.wf-letter.wf-pop { animation: wf-pop .4s var(--spring); }
+@keyframes wf-pop { from { transform: translate(-50%, -50%) scale(.3); } }
+.wf-fish-in.wf-wobble { animation: bb-shake .45s ease; }
+.wf-fish-in.wf-hint { animation: wf-hint .8s ease 3; }
+@keyframes wf-hint { 50% { transform: scale(1.15); filter: drop-shadow(0 0 14px #FFE27A) drop-shadow(0 0 6px #fff); } }
+.wf-fish-in.wf-arrive { animation: wf-arrive .5s var(--spring); }
+@keyframes wf-arrive { from { transform: scale(.4); opacity: 0; } }
+.wf-fish.wf-away { opacity: 0; pointer-events: none; }
+.wf-flyer { z-index: 5; }
+.wf-flyer .wf-fish-in { animation: none; }

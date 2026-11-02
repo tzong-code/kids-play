@@ -18,6 +18,7 @@ import kittySays from '../games/brain-carrie/kitty-says/index.js';
 import opposite from '../games/brain-carrie/opposite/index.js';
 import parade from '../games/brain-carrie/parade/index.js';
 import memory from '../games/brain-carrie/memory/index.js';
+import fishing from '../games/brain-carrie/fishing/index.js';
 import gallery from '../games/gallery/index.js';
 
-export const GAMES = [draw, colour, stickers, dollhouse, giraffe, busyBoard, peekaboo, colourMatch, shapeSorter, bigSmall, kittySays, opposite, parade, memory, gallery];
+export const GAMES = [draw, colour, stickers, dollhouse, giraffe, busyBoard, peekaboo, colourMatch, shapeSorter, bigSmall, kittySays, opposite, parade, memory, fishing, gallery];
