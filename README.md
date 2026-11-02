@@ -36,7 +36,7 @@ To install it on the iPad:
 
 | File | What it does |
 | --- | --- |
-| `js/app.js` | Profile picker, each girl's home, parent gate (hold ⚙️ 2 s, then a sum), parent settings |
+| `js/app.js` | Profile picker, each girl's home, parent gate (hold ⚙️ 2 s, then an easy times question), parent settings |
 | `js/profiles.js` | Age presets: palette, brushes, tools, page set, stamps. Add a child or bump an age here |
 | `js/canvas.js` | Drawing engine: brushes, pressure, palm rejection, flood fill, stamps, undo/redo, export |
 | `js/storage.js` | IndexedDB: drawings (PNG blobs) and settings |
@@ -46,7 +46,7 @@ To install it on the iPad:
 | `js/registry.js` | The list of games shown on the home screen |
 | `js/stickers.js` | Shared sticker-scene engine: tray, drag in, tap to wiggle, bin, saves per child |
 | `js/playtime.js` | Play blocks, the sleepy-cat countdown, lock state, today's log |
-| `js/gate.js` | Maths keypad and the hard three-question unlock |
+| `js/gate.js` | Maths keypad, the easy one-question gate and the hard three-question unlock |
 | `js/voice.js` | Spoken prompts for the brain games: a recorded clip from `assets/voice/` when one is listed, otherwise the built-in voice |
 | `js/fx.js` | Sparkles and confetti shared by the games |
 | `games/draw/` | Free draw (`index.js`), colouring pages (`colour.js`), the shared editor (`editor.js`) |
@@ -80,12 +80,13 @@ Each girl plays in blocks (20 minutes by default). A little cat in the top-right
 
 To unlock it:
 1. Tap **Grown-ups**.
-2. Answer three questions in a row: a 2-digit × 1-digit, a 2-digit × 2-digit, and a division. A wrong answer starts again with new questions.
+2. Answer one times question with single digits (like 7 × 8). A wrong answer just shows a new question. If **Hard** is chosen in Settings, it is three questions in a row instead: a 2-digit × 1-digit, a 2-digit × 2-digit, and a division.
 3. Choose **New block** or **Done for today**.
 
 The block runs on the real clock, so closing or restarting the app doesn't reset it. In Settings you can set:
 - the block length (10, 15, 20 or 30 minutes)
 - the number of blocks per day
+- the unlock question: Easy (the default) or Hard
 - today's log for each child (blocks started, minutes played, and minutes in each game)
 
 Settings can't unlock a locked child; only the lock-screen questions can.

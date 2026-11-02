@@ -8,9 +8,9 @@ import { sound, speak, unlock } from './sound.js';
 import * as storage from './storage.js';
 import { avatarSvg, catFull, mermaidFull, icon, TILE_ART, SCENES, cloudSvg, sparkleSvg, fishSvg, sleepingCatSvg } from './art.js';
 import * as playtime from './playtime.js';
-import { hardGate } from './gate.js';
+import { easyGate, hardGate, UNLOCK_LEVELS, UNLOCK_KEY } from './gate.js';
 
-export const VERSION = '1.11.0';
+export const VERSION = '1.11.1';
 
 const FULL_ART = { cat: catFull, 'mermaid-girl': mermaidFull };
 
@@ -109,7 +109,7 @@ async function enterProfile(p) {
 
 // ---------- play time over ----------
 
-/** Full-screen lock: a sleeping kitten; only the hard maths gate gets past it. */
+/** Full-screen lock: a sleeping kitten; only the maths gate (easy or hard, a grown-up's choice) gets past it. */
 function openLock(profile) {
   current = null;
   playtime.leave();
@@ -124,8 +124,10 @@ function openLock(profile) {
         el('p.lock-sub', {}, 'Ask Mummy or Daddy.'),
         el('button.text-btn.lock-parent', { onclick: gateScreen }, 'Grown-ups'));
     };
-    const gateScreen = () => {
-      panel.replaceChildren(hardGate(choiceScreen), el('button.text-btn', { onclick: restScreen }, 'Back'));
+    const gateScreen = async () => {
+      const level = await storage.getSetting(UNLOCK_KEY).catch(() => null);
+      const gate = level === 'hard' ? hardGate(choiceScreen) : easyGate(choiceScreen);
+      panel.replaceChildren(gate, el('button.text-btn', { onclick: restScreen }, 'Back'));
     };
     const choiceScreen = async () => {
       const [limit, st] = await Promise.all([playtime.limitFor(profile.id), playtime.status(profile.id)]);
@@ -222,27 +224,9 @@ function gameLog(games) {
 }
 
 function openGate() {
-  const a = 3 + Math.floor(Math.random() * 7);
-  const b = 3 + Math.floor(Math.random() * 7);
-  let entry = '';
   return show(r => {
-    const display = el('div.gate-entry', {}, '?');
-    const pad = el('div.gate-pad', {},
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, '✓'].map(k => el('button.gate-key', {
-        onclick: () => {
-          if (k === '⌫') entry = entry.slice(0, -1);
-          else if (k === '✓') {
-            if (Number(entry) === a + b) return openSettings();
-            entry = '';
-            play(display, 'wiggle');
-          } else if (entry.length < 2) entry += k;
-          display.textContent = entry || '?';
-        },
-      }, String(k))));
     r.append(el('div.gate', {},
-      el('h1', {}, 'Grown-ups only'),
-      el('p.gate-q', {}, `${a} + ${b} =`),
-      display, pad,
+      easyGate(openSettings),
       el('button.text-btn', { onclick: () => openPicker() }, 'Back')));
   });
 }
@@ -303,16 +287,33 @@ async function openSettings() {
             countLabel.textContent = '0 drawings saved';
           }))));
     }
+    const unlockLevel = UNLOCK_LEVELS.includes(await storage.getSetting(UNLOCK_KEY).catch(() => null))
+      ? await storage.getSetting(UNLOCK_KEY) : 'easy';
+    const unlockRow = el('div.chip-row', {}, UNLOCK_LEVELS.map(v => {
+      const b = el('button.choice-chip', {
+        onclick: async () => {
+          await storage.setSetting(UNLOCK_KEY, v);
+          unlockRow.querySelectorAll('.selected').forEach(n => n.classList.remove('selected'));
+          b.classList.add('selected');
+        },
+      }, v === 'easy' ? 'Easy: one question (like 7 × 8)' : 'Hard: three harder questions');
+      if (v === unlockLevel) b.classList.add('selected');
+      return b;
+    }));
     r.append(el('div.settings', {},
       el('div.settings-head', {},
         el('h1', {}, 'Grown-ups'),
         el('button.text-btn.primary', { onclick: () => openPicker() }, 'Done')),
       sections,
       el('section.settings-card', {},
+        el('h2', {}, 'Unlocking play time'),
+        el('p.muted', {}, 'The maths question on the lock screen'),
+        unlockRow),
+      el('section.settings-card', {},
         el('h2', {}, 'Tips'),
         el('ul.tips', {},
           el('li', {}, 'Leave a child’s world: hold her mascot in the top-left corner for two seconds.'),
-          el('li', {}, 'Play time: when a block runs out the screen locks. Tap Grown-ups and answer three maths questions to unlock. Changes to block length apply from the next block.'),
+          el('li', {}, 'Play time: when a block runs out the screen locks. Tap Grown-ups and answer the maths question to unlock (three questions if set to Hard). Changes to block length apply from the next block.'),
           el('li', {}, 'Save Covey’s drawings to Photos: in her gallery, hold a picture for two seconds.'),
           el('li', {}, 'Lock the iPad to this app with Settings › Accessibility › Guided Access, then triple-click the side button.'),
           el('li', {}, 'Updates: open the app once on Wi-Fi after a new version is published, then close and reopen it.'))),

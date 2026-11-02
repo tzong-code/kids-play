@@ -1,4 +1,5 @@
-// Grown-up maths gates: a big number keypad, and the hard three-question unlock used by the lock screen.
+// Grown-up maths gates: a big number keypad, the easy one-question gate (settings, and the lock screen by
+// default) and the hard three-question unlock the lock screen uses when a grown-up picks Hard.
 
 import { el, play } from './ui.js';
 
@@ -26,6 +27,14 @@ export function keypad(onSubmit, maxDigits = 4) {
   };
 }
 
+/** One single digit × single digit question, 2 to 9 on both sides (e.g. 7 × 8), never the same as `previous`. */
+export function easyQuestion(previous) {
+  let q;
+  do { const a = rand(2, 9), b = rand(2, 9); q = { text: `${a} × ${b}`, answer: a * b }; }
+  while (q.text === previous?.text);
+  return q;
+}
+
 /** Three random questions: 2-digit × 1-digit, 2-digit × 2-digit, and a whole-number division. */
 function hardSet(previous = []) {
   const make = [
@@ -41,7 +50,32 @@ function hardSet(previous = []) {
 }
 
 /**
- * The lock-screen gate: all three must be right in a row; a wrong answer starts again with new questions.
+ * The easy gate: one question; a wrong answer just shows a new one (no lockout).
+ * Returns a node; calls onPass() when solved.
+ */
+export function easyGate(onPass) {
+  let q = easyQuestion();
+  const text = el('p.gate-q');
+  const hint = el('p.gate-hint', {}, 'Answer to unlock.');
+  const pad = keypad(answer => {
+    if (answer === q.answer) return onPass();
+    q = easyQuestion(q);
+    hint.textContent = 'Not quite. Try this one.';
+    pad.shake();
+    pad.reset();
+    render();
+  }, 2);
+  const render = () => { text.textContent = `${q.text} =`; };
+  render();
+  return el('div.gate-box', {}, el('h2', {}, 'Grown-ups only'), text, pad.node, hint);
+}
+
+/** The unlock levels a grown-up can choose for the lock screen (one setting for the whole household). */
+export const UNLOCK_LEVELS = ['easy', 'hard'];
+export const UNLOCK_KEY = 'unlock:level';
+
+/**
+ * The hard lock-screen gate: all three must be right in a row; a wrong answer starts again with new questions.
  * Returns a node; calls onPass() when solved.
  */
 export function hardGate(onPass) {
